@@ -18,17 +18,17 @@ public class Card {
 	private boolean privacy;
 	private Date created;
 
-	@ManyToMany
-	private Set<Group> groups;
+	@SuppressWarnings("JpaAttributeTypeInspection")
+	private Set<Key> groupKeys;
 
-	@OneToMany(cascade=CascadeType.ALL)
+	@OneToMany(cascade = CascadeType.ALL)
 	private List<Tag> tags;
 
 
 	public Card() {
 		this.tags = new ArrayList<Tag>();
 		this.setCreated(new Date());
-		this.setGroups(new HashSet<Group>());
+		this.setGroupKeys(new HashSet<Key>());
 	}
 
 	public Card(File img, User owner, boolean privacy) {
@@ -90,12 +90,12 @@ public class Card {
 		this.created = created;
 	}
 
-	public Set<Group> getGroups() {
-		return groups;
+	public Set<Key> getGroupKeys() {
+		return groupKeys;
 	}
 
-	public void setGroups(Set<Group> groups) {
-		this.groups = groups;
+	public void setGroupKeys(Set<Key> groups) {
+		this.groupKeys = groups;
 	}
 
 }
