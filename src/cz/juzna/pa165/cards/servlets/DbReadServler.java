@@ -17,12 +17,17 @@ import java.io.PrintWriter;
 @WebServlet(name = "DbReadServler")
 public class DbReadServler extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		PrintWriter writer = response.getWriter();
 		String cardKey = request.getParameter("cardKey");
 
 		CardDao cardDao = new JpaCardDao();
 		Card card = cardDao.findCardByKey(new KeyFactory.Builder("Card", Long.parseLong(cardKey)).getKey());
 
-		PrintWriter writer = response.getWriter();
+		if (card == null) {
+			writer.println("Card not found");
+			return;
+		}
+
 		writer.printf("Card name: %s, %d groups, %d tags:\n", card.getOwner(), card.getGroupKeys().size(), card.getTags().size());
 		for (Tag t : card.getTags()) {
 			writer.printf("- %s: %s\n", t.getKey(), t.getContent());
