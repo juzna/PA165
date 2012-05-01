@@ -2,15 +2,13 @@ package cz.juzna.pa165.cards.domain;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.users.User;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import java.io.Serializable;
 import java.util.Date;
+import javax.persistence.*;
 
 @Entity
-public class Tag {
+public class Tag implements Serializable{
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,18 +19,19 @@ public class Tag {
 	private String note;
 	private User owner;
 	private boolean privacy;
+	@Temporal(javax.persistence.TemporalType.DATE)
 	private Date created;
 
 
 	public Tag() {
-		this.setCreated(new Date());
+		this.created = new Date();
 	}
 
 	public Tag(String key, String content, boolean privacy) {
 		this();
-		this.setKey(key);
-		this.setContent(content);
-		this.setPrivacy(privacy);
+		this.key = key;
+		this.content = content;
+		this.privacy = privacy;
 	}
 
 	public Key getGaeKey() {

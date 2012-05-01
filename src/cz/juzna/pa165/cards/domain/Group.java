@@ -2,14 +2,13 @@ package cz.juzna.pa165.cards.domain;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.users.User;
-
-import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import javax.persistence.*;
 
 @Entity
-public class Group {
+public class Group implements Serializable {
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,17 +16,18 @@ public class Group {
 
 	private String name;
 	private User owner;
+	@Temporal(javax.persistence.TemporalType.DATE)
 	private Date created;
 
 
 	public Group() {
-		this.setCreated(new Date());
+		this.created = new Date();
 	}
 
 	public Group(String name, User owner) {
 		this();
-		this.setName(name);
-		this.setOwner(owner);
+		this.name = name;
+		this.owner = owner;
 	}
 
 	public Key getGaeKey() {

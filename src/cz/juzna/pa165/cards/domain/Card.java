@@ -2,20 +2,22 @@ package cz.juzna.pa165.cards.domain;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.users.User;
-
-import javax.persistence.*;
 import java.io.File;
+import java.io.Serializable;
 import java.util.*;
+import javax.persistence.*;
 
 @Entity
-public class Card {
-
+public class Card implements Serializable{
+	private static final long serialVersionUID = 1L;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Key gaeKey;
 	private File img;
 	private User owner;
 	private boolean privacy;
+	@Temporal(javax.persistence.TemporalType.DATE)
 	private Date created;
 
 	@SuppressWarnings("JpaAttributeTypeInspection")
@@ -27,15 +29,15 @@ public class Card {
 
 	public Card() {
 		this.tags = new ArrayList<Tag>();
-		this.setCreated(new Date());
-		this.setGroupKeys(new HashSet<Key>());
+		this.created = new Date();
+		this.groupKeys = new HashSet<Key>();
 	}
 
 	public Card(File img, User owner, boolean privacy) {
 		this();
-		this.setImg(img);
-		this.setOwner(owner);
-		this.setPrivacy(privacy);
+		this.img = img;
+		this.owner = owner;
+		this.privacy = privacy;
 	}
 
 	public Card(String imgPath, User owner, boolean privacy) {

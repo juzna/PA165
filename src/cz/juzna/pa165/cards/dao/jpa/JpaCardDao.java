@@ -1,17 +1,15 @@
 package cz.juzna.pa165.cards.dao.jpa;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.users.User;
 import cz.juzna.pa165.cards.dao.CardDao;
 import cz.juzna.pa165.cards.domain.Card;
-import cz.juzna.pa165.cards.domain.Group;
 import cz.juzna.pa165.cards.domain.Tag;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
 
 public class JpaCardDao implements CardDao {

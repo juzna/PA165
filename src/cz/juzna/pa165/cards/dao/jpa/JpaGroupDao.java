@@ -5,10 +5,9 @@ import com.google.appengine.api.users.User;
 import cz.juzna.pa165.cards.dao.GroupDao;
 import cz.juzna.pa165.cards.domain.Card;
 import cz.juzna.pa165.cards.domain.Group;
-
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
-import java.util.List;
 
 
 public class JpaGroupDao implements GroupDao {
