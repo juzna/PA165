@@ -1,12 +1,11 @@
 package cz.juzna.pa165.cards.dao;
 
-import java.util.List;
-import java.util.Map;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.users.User;
 import cz.juzna.pa165.cards.domain.Card;
-import cz.juzna.pa165.cards.domain.Group;
 import cz.juzna.pa165.cards.domain.Tag;
+import java.util.List;
+import java.util.Map;
 
 
 public interface CardDao {

@@ -16,9 +16,13 @@ import java.io.PrintWriter;
 
 @WebServlet(name = "DbReadServler")
 public class DbReadServler extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+
+	@Override
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		PrintWriter writer = response.getWriter();
 		String cardKey = request.getParameter("cardKey");
+		writer.printf("%s", cardKey);
 
 		CardDao cardDao = new JpaCardDao();
 		Card card = cardDao.findCardByKey(new KeyFactory.Builder("Card", Long.parseLong(cardKey)).getKey());

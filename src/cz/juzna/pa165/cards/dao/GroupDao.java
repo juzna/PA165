@@ -4,7 +4,6 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.users.User;
 import cz.juzna.pa165.cards.domain.Card;
 import cz.juzna.pa165.cards.domain.Group;
-
 import java.util.List;
 
 public interface GroupDao {
