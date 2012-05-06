@@ -11,4 +11,10 @@
 				class="org.springframework.web.servlet.view.InternalResourceViewResolver"
 				p:prefix="/WEB-INF/views/" p:suffix=".jsp" />
 
+		<bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
+
+		<bean id="cardDao" class="cz.juzna.pa165.cards.dao.jpa.JpaCardDao" />
+
+		<bean id="groupDao" class="cz.juzna.pa165.cards.dao.jpa.JpaGroupDao" />
+
 </beans>
