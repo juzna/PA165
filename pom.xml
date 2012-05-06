@@ -4,9 +4,15 @@
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>pa165-drsnaci</groupId>
-	<artifactId>PA165-Cards</artifactId>
+
+	<groupId>cz.juzna.pa165</groupId>
+	<artifactId>cards</artifactId>
 	<version>0.1-SNAPSHOT</version>
+
+	<packaging>war</packaging>
+	<name>PA165 - Cards</name>
+	<url>https://github.com/juzna/PA165</url>
+
 
 	<properties>
 		<gae.home>/usr/lib/jvm/appengine-java-sdk-1.6.5</gae.home>
@@ -14,16 +20,12 @@
 		<gae.version>1.6.5</gae.version>
 	</properties>
 
+
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>3.8.2</version>
-		</dependency>
-		<dependency>
-			<groupId>net.kindleit</groupId>
-			<artifactId>maven-gae-plugin</artifactId>
-			<version>0.9.2</version>
+			<version>4.8</version>
 		</dependency>
 		<dependency>
 			<groupId>com.google.appengine.orm</groupId>
@@ -76,6 +78,11 @@
 					</dependency>
 				</dependencies>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.2</version>
+			</plugin>
 		</plugins>
 	</build>
 
@@ -87,6 +94,8 @@
 			<url>http://maven-gae-plugin.googlecode.com/svn/repository</url>
 		</repository>
 	</repositories>
+
+
 	<pluginRepositories>
 		<pluginRepository>
 			<id>maven-gae-plugin-repo</id>
