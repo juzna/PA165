@@ -13,13 +13,10 @@
 	<name>PA165 - Cards</name>
 	<url>https://github.com/juzna/PA165</url>
 
-
 	<properties>
-		<gae.home>/usr/lib/jvm/appengine-java-sdk-1.6.5</gae.home>
 		<gae.app.name>pa165-cards</gae.app.name>
 		<gae.version>1.6.5</gae.version>
 	</properties>
-
 
 	<dependencies>
 		<dependency>
