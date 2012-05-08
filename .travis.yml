@@ -1,1 +1,11 @@
 language: java
+
+# prepare local AppEngine
+install:
+ - mvn gae:unpack
+
+# Build, run GAE and test
+script:
+ - mvn clean war:war gae:start -DskipTests=true
+ - "curl http://localhost:8080/ | grep title"
+ - mvn gae:stop
