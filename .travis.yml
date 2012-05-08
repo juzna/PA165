@@ -7,5 +7,5 @@ install:
 # Build, run GAE and test
 script:
  - mvn clean war:war gae:start -DskipTests=true
- - "curl http://localhost:8080/ | grep title"
+ - "curl -I http://localhost:8080/ | grep '200 OK'"
  - mvn gae:stop
