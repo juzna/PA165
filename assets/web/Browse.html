@@ -1,0 +1,261 @@
+<!doctype html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en" xmlns="http://www.w3.org/1999/html"> <!--<![endif]-->
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+	<title>jCardsManager</title>
+	<meta name="description" content="">
+	<meta name="author" content="">
+
+	<meta name="viewport" content="width=device-width">
+
+	<link rel="stylesheet" href="less/style.css">
+
+	<script src="js/libs/modernizr-2.5.3-respond-1.1.0.min.js"></script>
+</head>
+<body>
+<!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
+
+<div class="navbar navbar-fixed-top">
+	<div class="navbar-inner">
+		<div class="container">
+			<span class="userarea" style="float: right;"><button class="btn" href="#">Login with Google</button></span>
+			<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</a>
+			<a class="brand" href="/">jCardsManager</a>
+			<div class="nav-collapse collapse">
+				<ul class="nav">
+					<li class="active">
+						<a href="./index.html">Homepage</a>
+					</li>
+					<li class="">
+						<a href="./scaffolding.html">Browse</a>
+					</li>
+					<li class="">
+						<a href="./base-css.html">Upload</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="container">
+<!-------------------->
+<div class="row">
+	<ul class="breadcrumb">
+		<li><a href="#">Home</a> <span class="divider">/</span></li>
+		<li class="active">Browse</li>
+	</ul>
+</div>
+
+<div id="pane" class="row">
+	<div class="span4">
+		<div id="browser">
+			<div class="browser-filters">
+				<h3>Filters</h3>
+				<form class="search">
+					<div class="input-append">
+						<input class="span3" type="text"><button class="btn" type="button"><i class="icon-search"></i></button>
+					</div>
+				</form>
+				<div class="btn-group" style="margin: 9px 0;">
+					<button class="btn">All public</button>
+					<button class="btn">Only mine</button>
+				</div>
+			</div>
+			<div class="browser-groups">
+				<h3>Groups <a class="btn btn-mini">Add group</a></h3>
+				<ul class="nav nav-tabs nav-stacked">
+					<li><a href="#">Barber Shops <span class="badge badge-info">15</span></a></li>
+					<li><a href="#">Dentists <span class="badge badge-info">8</span></a></li>
+					<li><a href="#">Germany <span class="badge badge-info">4</span></a></li>
+					<li class="active"><a href="#">Restaurants <span class="badge badge-info">0</span></a></li>
+					<li><a href="#">Personal <span class="badge badge-info">44</span></a></li>
+					<li><a href="#">Messages <span class="badge badge-info">14</span></a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<div class="span8">
+		<div id="content">
+			<div class="card-box-row row">
+				<div class="span4">
+					<div class="card-image">
+						<img class="fixie" height="150" />
+					</div>
+					<div class="card-meta">
+						<p class="report"><a href="#">Report</a></p>
+						<p>By <a href="#">John Doe</a><br />at 2012/04/21 14:45</p>
+					</div>
+				</div>
+				<div class="span 4">
+					<dl class="card-fields">
+						<dt data:position="">Name</dt><dd><h6>John Doe</h6></dd>
+						<dt data:position="">Address</dt><dd>Stree 5, Brno, Cze</dd>
+						<dt data:position="">Phone</dt><dd>555 999 222</dd>
+						<dt data:position="">E-mail</dt><dd>johndoe@example.com</dd>
+						<dt data:position="">Position</dt><dd>CEO</dd>
+						<dt data:position="">Company</dt><dd>Google</dd>
+					</dl>
+				</div>
+			</div>
+			<div class="card-box-row row">
+				<div class="span4">
+					<div class="card-image">
+						<img class="fixie" height="150" />
+					</div>
+					<div class="card-meta">
+						<p class="report"><a href="#">Report</a></p>
+						<p>By <a href="#">John Doe</a><br />at 2012/04/21 14:45</p>
+					</div>
+				</div>
+				<div class="span 4">
+					<dl class="card-fields">
+						<dt data:position="">Name</dt><dd><h6>John Doe</h6></dd>
+						<dt data:position="">Address</dt><dd>Stree 5, Brno, Cze</dd>
+						<dt data:position="">Phone</dt><dd>555 999 222</dd>
+						<dt data:position="">E-mail</dt><dd>johndoe@example.com</dd>
+						<dt data:position="">Position</dt><dd>CEO</dd>
+						<dt data:position="">Company</dt><dd>Google</dd>
+					</dl>
+				</div>
+			</div>
+			<div class="card-box-row row">
+				<div class="span4">
+					<div class="card-image">
+						<img class="fixie" height="150" />
+					</div>
+					<div class="card-meta">
+						<p class="report"><a href="#">Report</a></p>
+						<p>By <a href="#">John Doe</a><br />at 2012/04/21 14:45</p>
+					</div>
+				</div>
+				<div class="span 4">
+					<dl class="card-fields">
+						<dt data:position="">Name</dt><dd><h6>John Doe</h6></dd>
+						<dt data:position="">Address</dt><dd>Stree 5, Brno, Cze</dd>
+						<dt data:position="">Phone</dt><dd>555 999 222</dd>
+						<dt data:position="">E-mail</dt><dd>johndoe@example.com</dd>
+						<dt data:position="">Position</dt><dd>CEO</dd>
+						<dt data:position="">Company</dt><dd>Google</dd>
+					</dl>
+				</div>
+			</div>
+			<div class="card-box-row row">
+				<div class="span4">
+					<div class="card-image">
+						<img class="fixie" height="150" />
+					</div>
+					<div class="card-meta">
+						<p class="report"><a href="#">Report</a></p>
+						<p>By <a href="#">John Doe</a><br />at 2012/04/21 14:45</p>
+					</div>
+				</div>
+				<div class="span 4">
+					<dl class="card-fields">
+						<dt data:position="">Name</dt><dd><h6>John Doe</h6></dd>
+						<dt data:position="">Address</dt><dd>Stree 5, Brno, Cze</dd>
+						<dt data:position="">Phone</dt><dd>555 999 222</dd>
+						<dt data:position="">E-mail</dt><dd>johndoe@example.com</dd>
+						<dt data:position="">Position</dt><dd>CEO</dd>
+						<dt data:position="">Company</dt><dd>Google</dd>
+					</dl>
+				</div>
+			</div>
+			<div class="card-box-row row">
+				<div class="span4">
+					<div class="card-image">
+						<img class="fixie" height="150" />
+					</div>
+					<div class="card-meta">
+						<p class="report"><a href="#">Report</a></p>
+						<p>By <a href="#">John Doe</a><br />at 2012/04/21 14:45</p>
+					</div>
+				</div>
+				<div class="span 4">
+					<dl class="card-fields">
+						<dt data:position="">Name</dt><dd><h6>John Doe</h6></dd>
+						<dt data:position="">Address</dt><dd>Stree 5, Brno, Cze</dd>
+						<dt data:position="">Phone</dt><dd>555 999 222</dd>
+						<dt data:position="">E-mail</dt><dd>johndoe@example.com</dd>
+						<dt data:position="">Position</dt><dd>CEO</dd>
+						<dt data:position="">Company</dt><dd>Google</dd>
+					</dl>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-------------------->
+<hr />
+<footer>
+	<div class="row">
+		<div class="span4">
+			<div id="footer-logo">
+				<img src="http://placehold.it/220x120" alt="Logo">
+			</div>
+			<div id="footer-disclaimer">
+				<p>Created for PA165.</p>
+
+				<p>Thanks to ...</p>
+			</div>
+		</div>
+
+		<div class="span4" id="footer-authors">
+			<h4>Authors
+				<small>(in alphabetical order)</small>
+			</h4>
+			<h5>Jan Dolecek</h5>
+			<p><a href="#">Twitter</a> | <a href="#">GitHub</a></p>
+
+			<h5>Pavel Dolecek</h5>
+			<p><a href="#">Twitter</a> | <a href="#">GitHub</a></p>
+
+			<h5>Jenyk Holman</h5>
+			<p><a href="#">Twitter</a> | <a href="#">GitHub</a></p>
+
+			<h5>Marie Hrdinova</h5>
+			<p><a href="#">Twitter</a> | <a href="#">GitHub</a></p>
+		</div>
+
+		<div class="span4" id="footer-other">
+			<p>Used technologies…</p>
+
+			<p>Github…</p>
+
+			<p>FI MUNI</p>
+		</div>
+	</div>
+</footer>
+</div>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script>window.jQuery || document.write('<script src="js/libs/jquery-1.7.2.min.js"><\/script>')</script>
+<script src="js/libs/bootstrap/bootstrap.min.js"></script>
+<script src="js/fixie.js"></script>
+<script src="js/script.js"></script>
+<script>
+	var _gaq = [
+		['_setAccount', 'UA-XXXXX-X'],
+		['_trackPageview']
+	];
+	(function (d, t) {
+		var g = d.createElement(t), s = d.getElementsByTagName(t)[0];
+		g.src = ('https:' == location.protocol ? '//ssl' : '//www') + '.google-analytics.com/ga.js';
+		s.parentNode.insertBefore(g, s)
+	}(document, 'script'));
+</script>
+
+</body>
+</html>
+
