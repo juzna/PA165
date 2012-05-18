@@ -12,4 +12,33 @@
 		<servlet-name>SpringAppEngine</servlet-name>
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
+
+
+	<!-- old, for testing only
+	  Btw I've got no idea how to run them together with Spring's DispatcherServlet (above).
+	  So if you wanna these tests, proceed as following:
+	   1/ comment out spring servlet
+	   2/ restart server
+	   3/ run test servlets
+	   4/ put back spring
+	   5/ restart server and use spring ;)
+
+	   Ugly, but dunno better solution and dont wanna waste more time on it ;)
+	-->
+	<servlet>
+		<servlet-name>dbWriteServlet</servlet-name>
+		<servlet-class>cz.juzna.pa165.cards.servlets.DbWriteServlet</servlet-class>
+	</servlet>
+	<servlet>
+		<servlet-name>dbReadServler</servlet-name>
+		<servlet-class>cz.juzna.pa165.cards.servlets.DbReadServlet</servlet-class>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>dbWriteServlet</servlet-name>
+		<url-pattern>/dbWriteTest</url-pattern>
+	</servlet-mapping>
+	<servlet-mapping>
+		<servlet-name>dbReadServler</servlet-name>
+		<url-pattern>/dbReadTest</url-pattern>
+	</servlet-mapping>
 </web-app>
