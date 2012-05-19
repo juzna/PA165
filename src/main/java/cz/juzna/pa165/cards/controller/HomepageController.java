@@ -29,8 +29,9 @@ public class HomepageController {
 
 		model.addAttribute("user", user);
 		model.addAttribute("loginUrl", userService.createLoginURL(request.getRequestURI()));
-		model.addAttribute("cards", cards.getAllCards());
 
-		return "Homepage";
+        // model.addAttribute("cards", cards.getAllCards()); // recent public cards
+
+		return "homepage";
 	}
 }

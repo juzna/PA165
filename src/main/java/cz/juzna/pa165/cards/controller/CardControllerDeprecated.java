@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
-public class CardController {
+public class CardControllerDeprecated {
 	@Autowired
 	private CardDao cards;
 
