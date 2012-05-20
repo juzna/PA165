@@ -61,4 +61,27 @@ public class Group implements Serializable {
 	public void setCreated(Date created) {
 		this.created = created;
 	}
+
+    @Override
+    public boolean equals(Object obj) {
+	if (obj == null) {
+	    return false;
+	}
+	if (getClass() != obj.getClass()) {
+	    return false;
+	}
+	final Group other = (Group) obj;
+	if (this.gaeKey != other.gaeKey && (this.gaeKey == null || !this.gaeKey.equals(other.gaeKey))) {
+	    return false;
+	}
+	return true;
+    }
+
+    @Override
+    public int hashCode() {
+	int hash = 3;
+	hash = 97 * hash + (this.gaeKey != null ? this.gaeKey.hashCode() : 0);
+	return hash;
+    }
+	
 }

@@ -100,4 +100,28 @@ public class Card implements Serializable{
 		this.groupKeys = groups;
 	}
 
+    @Override
+    public boolean equals(Object obj) {
+	if (obj == null) {
+	    return false;
+	}
+	if (getClass() != obj.getClass()) {
+	    return false;
+	}
+	final Card other = (Card) obj;
+	if (this.gaeKey != other.gaeKey && (this.gaeKey == null || !this.gaeKey.equals(other.gaeKey))) {
+	    return false;
+	}
+	return true;
+    }
+
+    @Override
+    public int hashCode() {
+	int hash = 5;
+	hash = 71 * hash + (this.gaeKey != null ? this.gaeKey.hashCode() : 0);
+	return hash;
+    }
+
+
+	
 }
