@@ -46,8 +46,8 @@ public class HomepageController {
 				
 		Collections.sort(publicCards, new CardByDateComparator());
                 
-                model.addAttribute("recentCard", publicCards); // recent public cards
+                model.addAttribute("recentPublicCards", publicCards); // recent public cards
 
-		return "homepage";
+		return "homepage/default";
 	}
 }

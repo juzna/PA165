@@ -15,7 +15,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -164,12 +163,11 @@ public class AccountController {
      * javax.validation.Valid nemuzu najit takze zatim preskakuji
      * @param model
      * @param request
-     * @param form
      * @param file
      * @throws IOException 
      */
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
-    public void accountUploadProcess(Model model, HttpServletRequest request, @Valid FormBean form, @RequestParam MultipartFile file) throws IOException {
+    public void accountUploadProcess(Model model, HttpServletRequest request, @RequestParam MultipartFile file) throws IOException {
 	UserService userService = UserServiceFactory.getUserService();
 	User user = userService.getCurrentUser();
 
