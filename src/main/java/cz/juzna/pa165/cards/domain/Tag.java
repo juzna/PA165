@@ -4,21 +4,33 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.users.User;
 import java.io.Serializable;
 import java.util.Date;
+import javax.jdo.annotations.*;
 import javax.persistence.*;
 
-@Entity
+@PersistenceCapable(detachable="true")
 public class Tag implements Serializable{
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@PrimaryKey
+	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
 	private Key gaeKey;
-
-	private String key;
+	
+	@Persistent
+	private String tagKey;
+	
+	@Persistent
 	private String content;
+	
+	@Persistent
 	private String note;
+	
+	@Persistent
 	private User owner;
+	
+	@Persistent
 	private boolean privacy;
+	
+	@Persistent
 	@Temporal(javax.persistence.TemporalType.DATE)
 	private Date created;
 
@@ -27,11 +39,21 @@ public class Tag implements Serializable{
 		this.created = new Date();
 	}
 
-	public Tag(String key, String content, boolean privacy) {
+	public Tag(String key, String content, User owner, boolean privacy) {
 		this();
-		this.key = key;
+		this.tagKey = key;
 		this.content = content;
+		this.owner = owner;
 		this.privacy = privacy;
+	}
+	
+	public Tag(Tag tag) {
+		this.created = tag.getCreated();
+		this.tagKey = tag.getTagKey();
+		this.content = tag.getContent();
+		this.privacy = tag.isPrivate();
+		this.note = tag.getNote();
+		this.owner = tag.getOwner();
 	}
 
 	public Key getGaeKey() {
@@ -43,11 +65,11 @@ public class Tag implements Serializable{
 	}
 
 	public String getName() {
-		return key;
+		return tagKey;
 	}
 
 	public void setName(String name) {
-		this.key = name;
+		this.tagKey = name;
 	}
 
 	public String getContent() {
@@ -66,12 +88,12 @@ public class Tag implements Serializable{
 		this.note = note;
 	}
 
-	public String getKey() {
-		return key;
+	public String getTagKey() {
+		return tagKey;
 	}
 
-	public void setKey(String key) {
-		this.key = key;
+	public void setTagKey(String key) {
+		this.tagKey = key;
 	}
 
 	public User getOwner() {
@@ -82,7 +104,7 @@ public class Tag implements Serializable{
 		this.owner = owner;
 	}
 
-	public boolean isPrivacy() {
+	public boolean isPrivate() {
 		return privacy;
 	}
 

@@ -2,30 +2,37 @@ package cz.juzna.pa165.cards.domain;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.users.User;
-import java.io.File;
 import java.io.Serializable;
 import java.util.*;
-import javax.persistence.*;
+import javax.jdo.annotations.*;
 
-@Entity
+@PersistenceCapable(detachable="true")
 public class Card implements Serializable{
 	private static final long serialVersionUID = 1L;
 	
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@PrimaryKey
+	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
 	private Key gaeKey;
-	private File img;
+	
+	@Persistent
+	private String imgPath;
+	
+	@Persistent
 	private User owner;
+	
+	@Persistent
 	private boolean privacy;
-	@Temporal(javax.persistence.TemporalType.DATE)
+	
+	@Persistent
 	private Date created;
-
-	@SuppressWarnings("JpaAttributeTypeInspection")
+	
+	@Persistent
 	private Set<Key> groupKeys;
-
-	@OneToMany(cascade = CascadeType.ALL)
+	
+	@Persistent
+	@Element(dependent = "true")
 	private List<Tag> tags;
-
+	
 
 	public Card() {
 		this.tags = new ArrayList<Tag>();
@@ -33,15 +40,11 @@ public class Card implements Serializable{
 		this.groupKeys = new HashSet<Key>();
 	}
 
-	public Card(File img, User owner, boolean privacy) {
+	public Card(String imgPath, User owner, boolean privacy) {
 		this();
-		this.img = img;
+		this.imgPath = imgPath;
 		this.owner = owner;
 		this.privacy = privacy;
-	}
-
-	public Card(String imgPath, User owner, boolean privacy) {
-		this(new File(imgPath), owner, privacy);
 	}
 
 	public Key getGaeKey() {
@@ -60,12 +63,12 @@ public class Card implements Serializable{
 		this.tags = tags;
 	}
 
-	public File getImg() {
-		return img;
+	public String getImgPath() {
+		return imgPath;
 	}
 
-	public void setImg(File img) {
-		this.img = img;
+	public void setImgPath(String imgPath) {
+		this.imgPath = imgPath;
 	}
 
 	public User getOwner() {
@@ -76,7 +79,7 @@ public class Card implements Serializable{
 		this.owner = owner;
 	}
 
-	public boolean isPrivacy() {
+	public boolean isPrivate() {
 		return privacy;
 	}
 

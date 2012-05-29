@@ -4,24 +4,38 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.users.User;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+import javax.jdo.annotations.*;
 import javax.persistence.*;
 
-@Entity
+@PersistenceCapable(detachable="true")
 public class Group implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@PrimaryKey
+	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
 	private Key gaeKey;
-
+	
+	@Persistent
 	private String name;
+	
+	@Persistent
 	private User owner;
+	
+	@Persistent
 	@Temporal(javax.persistence.TemporalType.DATE)
 	private Date created;
+	
+	@Persistent(mappedBy = "group")
+	@Element(dependent = "true")
+	private Set<Key> cardKeys;
+	
 
 
 	public Group() {
 		this.created = new Date();
+		this.cardKeys = new HashSet<Key>();
 	}
 
 	public Group(String name, User owner) {
@@ -62,7 +76,15 @@ public class Group implements Serializable {
 		this.created = created;
 	}
 
-    @Override
+    public Set<Key> getCardKeys() {
+		return cardKeys;
+	}
+
+	public void setCardKeys(Set<Key> groupKeys) {
+		this.cardKeys = groupKeys;
+	}
+
+	@Override
     public boolean equals(Object obj) {
 	if (obj == null) {
 	    return false;

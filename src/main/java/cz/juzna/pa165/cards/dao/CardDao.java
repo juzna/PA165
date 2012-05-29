@@ -2,8 +2,11 @@ package cz.juzna.pa165.cards.dao;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.users.User;
+
 import cz.juzna.pa165.cards.domain.Card;
+import cz.juzna.pa165.cards.domain.Group;
 import cz.juzna.pa165.cards.domain.Tag;
+
 import java.util.List;
 import java.util.Map;
 
@@ -14,7 +17,9 @@ public interface CardDao {
 
 	public void removeCard(Card card);
 
-	public Card updateCard(Card card);
+	public Card changeCardImgPath(Card card, String newImgPath);
+	
+	public Card changeCardPrivacy(Card card);
 
 	public List<Card> getAllCards();
 
@@ -22,15 +27,20 @@ public interface CardDao {
 
 	public List<Card> findCardsByOwner(User owner);
 
-//  bug in design: useless method?
-//	public List<Group> getAllGroupsOfCard(Card card);
-
 	public Card addTag(Card card, Tag tag);
 
-	public Card removeTag(Card card, Tag tag);
+	public Card removeTag(Card card, String tagKey);
 
-//  bug in design: useless method? (zmenit tag a zavolat updateCard())
-//	public Card updateTag(Card card, Tag tag);
+	public Map<String, Tag> getCardTags(Card card);
+	
+	public Map<String, Tag> getCardPublicTags(Card card);
+	
+	public Map<String, Tag> getUserCardTags(Card card, User owner);
+	
+	public List<Group> getGroupsOfCard(Card card);
+	
+	public List<Card> getPublicCards();
+	
+	public Card refreshCard(Card card);
 
-	public Map<String, Tag> getAllTags(Card card);
 }
