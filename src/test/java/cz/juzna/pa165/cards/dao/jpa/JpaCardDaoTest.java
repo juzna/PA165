@@ -2,13 +2,13 @@ package cz.juzna.pa165.cards.dao.jpa;
 
 import com.google.appengine.api.users.User;
 import cz.juzna.pa165.cards.dao.CardDao;
+import cz.juzna.pa165.cards.dao.jdo.JdoCardDao;
 import cz.juzna.pa165.cards.domain.Card;
+import java.lang.reflect.Field;
+import javax.persistence.EntityManager;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import javax.persistence.EntityManager;
-import java.lang.reflect.Field;
 
 public class JpaCardDaoTest {
 	private CardDao cardDao;
@@ -16,10 +16,10 @@ public class JpaCardDaoTest {
 
 	@Before
 	public void setUp() throws Exception {
-		cardDao = new JpaCardDao();
+		cardDao = new JdoCardDao();
 
 		// Get inner entity manager ;)
-		Field emr = JpaCardDao.class.getDeclaredField("em");
+		Field emr = JdoCardDao.class.getDeclaredField("em");
 		emr.setAccessible(true);
 		em = (EntityManager) emr.get(cardDao);
 	}

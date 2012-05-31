@@ -8,22 +8,18 @@ import cz.juzna.pa165.cards.dao.CardDao;
 import cz.juzna.pa165.cards.dao.GroupDao;
 import cz.juzna.pa165.cards.domain.Card;
 import cz.juzna.pa165.cards.domain.Group;
-import cz.juzna.pa165.cards.util.CardsUtil;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @RequestMapping("/account/*")
@@ -33,13 +29,13 @@ public class AccountController {
     private CardDao cards;
     @Autowired
     private GroupDao groups;
-    
+
     /**
-     * Pripravuje informace o uzivateli
-     * "user" - uzivatel
+     * Pripravuje informace na stranku o uzivateli "user" - uzivatel
+     *
      * @param model
      * @param request
-     * @return 
+     * @return predani rizeni do /views/account.ftl
      */
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String account(ModelMap model, HttpServletRequest request) {
@@ -51,15 +47,15 @@ public class AccountController {
 
 	return "account";
     }
-    
+
     /**
-     * Pripravuje vsechny karty daneho uzivatele
-     * "publicCard" - mnozina verejnych karet
-     * "userCards" - mnozina uzivatelovych karet
-     * - pokud chcete prunik tak si mnoziny soupnete do jedne
+     * Pripravuje vsechny karty daneho uzivatele, seznamy mohou byt prazdne
+     * "publicCard" - seznam verejnych karet "userCards" - seznam uzivatelovych
+     * karet
+     *
      * @param model
      * @param request
-     * @return 
+     * @return predani rizeni do /views/accountManage.ftl
      */
     @RequestMapping(value = "/manage", method = RequestMethod.GET)
     public String accountManage(ModelMap model, HttpServletRequest request) {
@@ -68,25 +64,26 @@ public class AccountController {
 
 	model.addAttribute("user", user);
 	model.addAttribute("loginUrl", userService.createLoginURL(request.getRequestURI()));
-	
-	if (user != null){
-	    Set<Card> userCards = new HashSet<Card>(cards.findCardsByOwner(user));
-	    model.addAttribute("userCards", userCards); // all user cards
+
+	if (user != null) {
+	    model.addAttribute("userCards", cards.findCardsByOwner(user)); // all user's cards
+	} else {
+	    model.addAttribute("userCards", new ArrayList<Card>());
 	}
-	Set<Card> publicCards = new HashSet<Card>(CardsUtil.getPublicCards(cards.getAllCards()));	
-	
-	model.addAttribute("publicCards", publicCards);
+
+	model.addAttribute("publicCards", cards.getPublicCards());
 
 	return "accountManage";
     }
 
     /**
-     * Pripravuje vizitku
-     * "card" - null nebo vizitka (null - nenalezena nebo nemá přístup)
+     * Pripravuje vizitku na zobrazeni "card" - null nebo vizitka (null -
+     * nenalezena nebo nema přístup)
+     *
      * @param model
      * @param request
-     * @param cardId
-     * @return 
+     * @param cardId - id zobrazovane vizitky
+     * @return predani rizeni do /views/accountCard.ftl
      */
     @RequestMapping(value = "/card/{cardId}", method = RequestMethod.GET)
     public String accountCard(ModelMap model, HttpServletRequest request, @PathVariable Key cardId) {
@@ -95,25 +92,26 @@ public class AccountController {
 
 	model.addAttribute("user", user);
 	model.addAttribute("loginUrl", userService.createLoginURL(request.getRequestURI()));
-	
+
 	Card card = cards.findCardByKey(cardId);
-	if (card != null){
-	    if (card.isPrivacy() && !card.getOwner().equals(user)){
+	if (card != null) {
+	    if (card.isPrivate() && !card.getOwner().equals(user)) {
 		card = null;
 	    }
 	}
-	
+
 	model.addAttribute("card", card); // card info
 
 	return "accountCard";
     }
-    
+
     /**
-     * Pripravuje vsechny skupiny daneho uzivatele
-     * "groups" - prazdna pro neprihlaseneho uzivatele
+     * Pripravuje vsechny skupiny daneho uzivatele "groups" - skupiny uzivatele,
+     * prazdna pro neprihlaseneho
+     *
      * @param model
      * @param request
-     * @return 
+     * @return predani rizeni do /views/accountGroups.ftl
      */
     @RequestMapping(value = "/groups", method = RequestMethod.GET)
     public String accountGroups(ModelMap model, HttpServletRequest request) {
@@ -122,25 +120,25 @@ public class AccountController {
 
 	model.addAttribute("user", user);
 	model.addAttribute("loginUrl", userService.createLoginURL(request.getRequestURI()));
-	
+
 	List<Group> userGroups = new ArrayList<Group>();
-	
-	if (user != null){
+
+	if (user != null) {
 	    userGroups = groups.findGroupsByOwner(user);
 	}
-	
+
 	model.addAttribute("groups", userGroups); // all users groups
 
 	return "accountGroups";
     }
 
-    
     /**
-     * Pripravuje novou cistou kartu na nahrani
-     * tezko vam tam muzu dat ralated vizitky kdyz nevim co bude nahrano
+     * Pripravuje novou cistou kartu na nahrani tezko vam tam muzu dat ralated
+     * vizitky kdyz nevim co bude nahrano :)
+     *
      * @param model
      * @param request
-     * @return 
+     * @return predani rizeni do /views/accountUpload.ftl
      */
     @RequestMapping(value = "/upload", method = RequestMethod.GET)
     public String accountUpload(ModelMap model, HttpServletRequest request) {
@@ -149,7 +147,7 @@ public class AccountController {
 
 	model.addAttribute("user", user);
 	model.addAttribute("loginUrl", userService.createLoginURL(request.getRequestURI()));
-	
+
 	Card card = new Card();
 	model.addAttribute("card", card); // cista karta pro prazdny formular(get all card attributes (id, name, owner, addedAt, private, ...)
 	// model.addAttribute("relatedCards", …); // get Related cards, for example siblings in database
@@ -157,25 +155,29 @@ public class AccountController {
 
 	return "accountUpload";
     }
-    
+
     /**
-     * Zpracovani karty po vyplneni formulare
-     * javax.validation.Valid nemuzu najit takze zatim preskakuji
+     * Zpracovani karty po vyplneni formulare zatim to nejjednodussi - zadna
+     * kontrola
+     *
+     * @param card
      * @param model
      * @param request
-     * @param file
-     * @throws IOException 
+     * @throws IOException
      */
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
-    public void accountUploadProcess(Model model, HttpServletRequest request, @RequestParam MultipartFile file) throws IOException {
+    public String accountUploadProcess(@ModelAttribute Card card, Model model, HttpServletRequest request) throws IOException {
 	UserService userService = UserServiceFactory.getUserService();
 	User user = userService.getCurrentUser();
 
 	model.addAttribute("user", user);
 	model.addAttribute("loginUrl", userService.createLoginURL(request.getRequestURI()));
+
+	model.addAttribute("card", card);
+	cards.addCard(card);
 	// Save card information
 	// Save card image
 	// model.addAttribute("flashes", …); // Success/fail
-	// return "redirect:/..."; // redirect to /account/manager/{cardId}
+	return "redirect:/account/manager/" + card.getGaeKey();// redirect to /account/manager/{cardId}
     }
 }

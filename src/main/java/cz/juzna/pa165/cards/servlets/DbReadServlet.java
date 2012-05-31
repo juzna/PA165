@@ -1,23 +1,22 @@
-package cz.juzna.pa165.cards.servlets;
+/*package cz.juzna.pa165.cards.servlets;
 
 import com.google.appengine.api.datastore.KeyFactory;
 import cz.juzna.pa165.cards.dao.CardDao;
 import cz.juzna.pa165.cards.dao.jpa.JpaCardDao;
 import cz.juzna.pa165.cards.domain.Card;
 import cz.juzna.pa165.cards.domain.Tag;
-
+import java.io.IOException;
+import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
 
 
 /**
  * For testing only ;)
- */
+ * /
 @WebServlet(name = "DbReadServlet")
 public class DbReadServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -41,4 +40,4 @@ public class DbReadServlet extends HttpServlet {
 			writer.printf("- %s: %s\n", t.getKey(), t.getContent());
 		}
 	}
-}
+}*/

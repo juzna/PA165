@@ -1,4 +1,4 @@
-package cz.juzna.pa165.cards.servlets;
+/*package cz.juzna.pa165.cards.servlets;
 
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserServiceFactory;
@@ -9,21 +9,20 @@ import cz.juzna.pa165.cards.dao.jpa.JpaGroupDao;
 import cz.juzna.pa165.cards.domain.Card;
 import cz.juzna.pa165.cards.domain.Group;
 import cz.juzna.pa165.cards.domain.Tag;
-
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.List;
 
 
 /**
  * For testing only!
  * Makes some test on the data store
- */
+ * /
 @WebServlet(name = "DbWriteServlet")
 public class DbWriteServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -76,4 +75,4 @@ public class DbWriteServlet extends HttpServlet {
 		writer.println("Group keys: " + g1.getGaeKey() + ", " + g2.getGaeKey() + ", " + g3.getGaeKey());
 		writer.println("Card key: " + card.getGaeKey());
 	}
-}
+}*/

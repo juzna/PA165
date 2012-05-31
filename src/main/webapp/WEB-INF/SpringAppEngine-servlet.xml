@@ -28,7 +28,7 @@
 
 		<bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
 
-		<bean id="cardDao" class="cz.juzna.pa165.cards.dao.jpa.JpaCardDao" />
+		<bean id="cardDao" class="cz.juzna.pa165.cards.dao.jdo.JdoCardDao" />
 
-		<bean id="groupDao" class="cz.juzna.pa165.cards.dao.jpa.JpaGroupDao" />
+		<bean id="groupDao" class="cz.juzna.pa165.cards.dao.jdo.JdoGroupDao" />
 </beans>

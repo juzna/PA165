@@ -6,13 +6,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 public class SystemController {
-        
-        /**
-         * Sem se budou posilat vsechny nezname pozadavky url
-         * @return redirect to Misplaced.jsp
-         */
-	@RequestMapping(value="*", method = RequestMethod.GET)
-	public String misplaced(){
-		return "Misplaced";
-	}
+
+    /**
+     * Sem se budou posilat vsechny nezname pozadavky url
+     *
+     * @return predani rizeni do /views/Misplaced.ftl
+     */
+    @RequestMapping(value = "*", method = RequestMethod.GET)
+    public String misplaced() {
+	return "Misplaced";
+    }
 }
