@@ -16,14 +16,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 @Controller
 @RequestMapping("account/*")
-public class AccountController {
+public class AccountController extends BaseController {
 
     @Autowired
     private CardDao cards;
@@ -39,13 +41,7 @@ public class AccountController {
      */
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String account(ModelMap model, HttpServletRequest request) {
-		UserService userService = UserServiceFactory.getUserService();
-		User user = userService.getCurrentUser();
-	
-		model.addAttribute("user", user);
-		model.addAttribute("loginUrl", userService.createLoginURL(request.getRequestURI()));
-	
-		return "account/default";
+    	return "account/default";
     }
 
     /**
@@ -61,9 +57,6 @@ public class AccountController {
     public String accountManage(ModelMap model, HttpServletRequest request) {
 	UserService userService = UserServiceFactory.getUserService();
 	User user = userService.getCurrentUser();
-
-	model.addAttribute("user", user);
-	model.addAttribute("loginUrl", userService.createLoginURL(request.getRequestURI()));
 
 	if (user != null) {
 	    model.addAttribute("userCards", cards.findCardsByOwner(user)); // all user's cards
@@ -90,9 +83,6 @@ public class AccountController {
 	UserService userService = UserServiceFactory.getUserService();
 	User user = userService.getCurrentUser();
 
-	model.addAttribute("user", user);
-	model.addAttribute("loginUrl", userService.createLoginURL(request.getRequestURI()));
-
 	Card card = cards.findCardByKey(cardId);
 	if (card != null) {
 	    if (card.isPrivate() && !card.getOwner().equals(user)) {
@@ -118,9 +108,6 @@ public class AccountController {
 	UserService userService = UserServiceFactory.getUserService();
 	User user = userService.getCurrentUser();
 
-	model.addAttribute("user", user);
-	model.addAttribute("loginUrl", userService.createLoginURL(request.getRequestURI()));
-
 	List<Group> userGroups = new ArrayList<Group>();
 
 	if (user != null) {
@@ -145,9 +132,6 @@ public class AccountController {
 		UserService userService = UserServiceFactory.getUserService();
 		User user = userService.getCurrentUser();
 	
-		model.addAttribute("user", user);
-		model.addAttribute("loginUrl", userService.createLoginURL(request.getRequestURI()));
-	
 		Card card = new Card();
 		model.addAttribute("card", card); // cista karta pro prazdny formular(get all card attributes (id, name, owner, addedAt, private, ...)
 		// model.addAttribute("relatedCards", ‚Ä¶); // get Related cards, for example siblings in database
@@ -166,15 +150,17 @@ public class AccountController {
      * @throws IOException
      */
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
-    public String accountUploadProcess(Model model, HttpServletRequest request) throws IOException {
+    public String accountUploadProcess(@RequestParam("form-upload-image") MultipartFile file, MultipartHttpServletRequest request, Model model) throws IOException {
+    	
 		UserService userService = UserServiceFactory.getUserService();
 		User user = userService.getCurrentUser();
-	
-		model.addAttribute("user", user);
-		model.addAttribute("loginUrl", userService.createLoginURL(request.getRequestURI()));
-	
+			
 		model.addAttribute("name", request.getParameter("form-upload-name"));
 		model.addAttribute("privacy", request.getParameter("form-upload-privacy"));
+		model.addAttribute("file", file.getSize());
+		
+		
+	
 		
 		return "account/upload-completed";
 		// return "redirect:/account/manager/" + card.getGaeKey();// redirect to /account/manager/{cardId}

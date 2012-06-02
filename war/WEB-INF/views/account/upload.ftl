@@ -16,17 +16,17 @@
 		<div class="span8">
 			<section id="account-panel">
 				<header><h2>Upload new card</h2></header>
-				<form class="form-horizontal" method="POST">
+				<form class="form-horizontal" action="/account/upload/" method="POST" enctype="multipart/form-data">
 					<div class="control-group">
 						<label class="control-label" for="form-upload-image">Select image:</label>
 						<div class="controls">
-							<input class="input-file" id="form-upload-image" type="file" />
+							<input class="input-file" id="form-upload-image" name="form-upload-image" type="file" />
 						</div>
 					</div>
 					<div class="control-group">
 			            <label class="control-label" for="form-upload-name">Name</label>
 			            <div class="controls">
-			            	<input type="text" id="form-upload-name">
+			            	<input type="text" id="form-upload-name" name="form-upload-name" />
 			            </div>
 			        </div>
 					<div class="control-group">

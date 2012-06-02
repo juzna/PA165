@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 @RequestMapping(value = "/")
-public class HomepageController {
+public class HomepageController extends BaseController {
 
     @Autowired
     private CardDao cards;
@@ -34,13 +34,6 @@ public class HomepageController {
      */
     @RequestMapping(method = RequestMethod.GET)
     public String menu(ModelMap model, HttpServletRequest request) {
-    	
-		UserService userService = UserServiceFactory.getUserService();
-		User user = userService.getCurrentUser();
-	
-		model.addAttribute("user", user);
-		model.addAttribute("loginUrl", userService.createLoginURL(request.getRequestURI()));
-	
 		List<Card> publicCards = cards.getPublicCards();
 	
 		model.addAttribute("recentPublicCards", publicCards);

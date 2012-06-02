@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 @RequestMapping("/browse/*")
-public class BrowseController {
+public class BrowseController extends BaseController {
 
     @Autowired
     private CardDao cards;
@@ -44,13 +44,9 @@ public class BrowseController {
 	UserService userService = UserServiceFactory.getUserService();
 	User user = userService.getCurrentUser();
 
-	model.addAttribute("user", user);
-	model.addAttribute("loginUrl", userService.createLoginURL(request.getRequestURI()));
-
 	Integer offset = Integer.getInteger(request.getParameter("offset")); //offset jako kolikata stranka
 	Integer limit = Integer.getInteger(request.getParameter("limit")); //pocet prvku na stranku
 
-	model.addAttribute("user", user);
 	//model.addAttribute("cards", …); // get cards to display, consider offset, limit and order
 	if (user != null) {
 	    model.addAttribute("groups", new ArrayList<Group>(groups.findGroupsByOwner(user)).subList((offset * limit - 1), (offset * limit + limit - 1))); // get all user's groups to display in sidebar
@@ -75,9 +71,6 @@ public class BrowseController {
     public String browseGroup(ModelMap model, HttpServletRequest request, @PathVariable Key groupId) {
 	UserService userService = UserServiceFactory.getUserService();
 	User user = userService.getCurrentUser();
-
-	model.addAttribute("user", user);
-	model.addAttribute("loginUrl", userService.createLoginURL(request.getRequestURI()));
 
 	Group group = groups.findGroupByKey(groupId);
 	List<Card> groupCards = new ArrayList<Card>();
@@ -105,9 +98,6 @@ public class BrowseController {
     public String updateGroup(@ModelAttribute Group group, ModelMap model, HttpServletRequest request, @PathVariable Key groupId) {
 	UserService userService = UserServiceFactory.getUserService();
 	User user = userService.getCurrentUser();
-
-	model.addAttribute("user", user);
-	model.addAttribute("loginUrl", userService.createLoginURL(request.getRequestURI()));
 
 	Group groupOld = groups.findGroupByKey(groupId);
 	List<Card> groupCards = new ArrayList<Card>();
@@ -137,9 +127,7 @@ public class BrowseController {
 	UserService userService = UserServiceFactory.getUserService();
 	User user = userService.getCurrentUser();
 
-	model.addAttribute("user", user);
-	model.addAttribute("loginUrl", userService.createLoginURL(request.getRequestURI()));
-
+	
 	Group group = groups.findGroupByKey(groupId);
 
 	if (group != null && group.getOwner().equals(user)) {
@@ -162,9 +150,6 @@ public class BrowseController {
     public String browseCard(ModelMap model, HttpServletRequest request, @PathVariable Key cardId) {
 	UserService userService = UserServiceFactory.getUserService();
 	User user = userService.getCurrentUser();
-
-	model.addAttribute("user", user);
-	model.addAttribute("loginUrl", userService.createLoginURL(request.getRequestURI()));
 
 	Card card = cards.findCardByKey(cardId);
 
@@ -196,9 +181,6 @@ public class BrowseController {
 	UserService userService = UserServiceFactory.getUserService();
 	User user = userService.getCurrentUser();
 
-	model.addAttribute("user", user);
-	model.addAttribute("loginUrl", userService.createLoginURL(request.getRequestURI()));
-
 	Card cardOld = cards.findCardByKey(cardId);
 
 	if (cardOld != null && (!cardOld.isPrivate() || cardOld.getOwner().equals(user))) {
@@ -224,9 +206,6 @@ public class BrowseController {
     public String deleteCard(ModelMap model, HttpServletRequest request, @PathVariable Key cardId) {
 	UserService userService = UserServiceFactory.getUserService();
 	User user = userService.getCurrentUser();
-
-	model.addAttribute("user", user);
-	model.addAttribute("loginUrl", userService.createLoginURL(request.getRequestURI()));
 
 	Card card = cards.findCardByKey(cardId);
 

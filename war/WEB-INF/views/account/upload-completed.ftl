@@ -6,6 +6,7 @@
 				<header><h2>Uploaded</h2></header>
 				<p>${name!"name not set"}</p>
 				<p>${privacy!"privacy not set"}</p>
+				<p>${file!"file not set"}</p>
 			</section>
 		</div>
 	</div>
