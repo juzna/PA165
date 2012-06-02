@@ -1,0 +1,23 @@
+<div class="navbar">
+	<div class="navbar-inner">
+		<div class="container">
+			<span class="userarea" style="float: right;">
+				<#if user??>
+					<p>You are logged in as ${user.getEmail()}</p>
+				<#else>
+					<a href="${loginUrl}">Login with Google</button>
+				</#if>
+			</span>
+			<a class="brand" href="/">jCardsManager</a>
+			<div class="nav-collapse collapse">
+				<ul class="nav">
+					<li class="active"><a href="/">Homepage</a></li>
+					<li class=""><a href="/browse">Browse</a></li>
+					<li class=""><a href="/browse/card">Browse card</a></li>
+					<li class=""><a href="/account/upload">Upload</a></li>
+					<li class=""><a href="/account/manage">Manage</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+</div>
