@@ -9,6 +9,7 @@ import cz.juzna.pa165.cards.domain.Card;
 import cz.juzna.pa165.cards.domain.Group;
 import cz.juzna.pa165.cards.util.BlobHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -26,6 +27,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("account/*")
+@Scope("request") /* per request, i.e. user can be injected properly ;) */
 public class AccountController extends BaseController {
 
     @Autowired
@@ -36,7 +38,14 @@ public class AccountController extends BaseController {
 	@Autowired
 	private User user;
 
-    /**
+
+	public AccountController() {
+		// Debug
+		System.out.println("Creating account controller");
+	}
+
+
+	/**
      * Pripravuje informace na stranku o uzivateli "user" - uzivatel
      *
      * @param model
@@ -59,8 +68,8 @@ public class AccountController extends BaseController {
      */
     @RequestMapping(value = "/manage", method = RequestMethod.GET)
     public String accountManage(ModelMap model, HttpServletRequest request) {
-	if (getUser() != null) {
-	    model.addAttribute("userCards", cards.findCardsByOwner(getUser())); // all user's cards
+	if (user != null) {
+	    model.addAttribute("userCards", cards.findCardsByOwner(user)); // all user's cards
 	} else {
 	    model.addAttribute("userCards", new ArrayList<Card>());
 	}
@@ -83,7 +92,7 @@ public class AccountController extends BaseController {
     public String accountCard(ModelMap model, HttpServletRequest request, @PathVariable Key cardId) {
 	Card card = cards.findCardByKey(cardId);
 	if (card != null) {
-	    if (card.isPrivate() && !card.getOwner().equals(getUser())) {
+	    if (card.isPrivate() && !card.getOwner().equals(user)) {
 		card = null;
 	    }
 	}
@@ -105,8 +114,8 @@ public class AccountController extends BaseController {
     public String accountGroups(ModelMap model, HttpServletRequest request) {
 	List<Group> userGroups = new ArrayList<Group>();
 
-	if (getUser() != null) {
-	    userGroups = groups.findGroupsByOwner(getUser());
+	if (user != null) {
+	    userGroups = groups.findGroupsByOwner(user);
 	}
 
 	model.addAttribute("groups", userGroups); // all users groups
@@ -149,7 +158,7 @@ public class AccountController extends BaseController {
 		// Save image to blob
 	    BlobKey blobKey = BlobHelper.addImage(file.getBytes());
 		
-		Card card = new Card(getUser(), blobKey, request.getParameter("form-upload-name"), false); // TODO
+		Card card = new Card(user, blobKey, request.getParameter("form-upload-name"), false); // TODO
 		cards.addCard(card);
 		
 		return "account/upload-completed";

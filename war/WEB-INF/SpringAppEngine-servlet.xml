@@ -36,7 +36,10 @@
 
 	<!-- user -->
 	<bean id="userFactory" class="cz.juzna.pa165.cards.util.UserFactory" />
-	<bean id="user" class="com.google.appengine.api.users.User" factory-bean="userFactory" factory-method="getUser" />
+	<bean id="user" class="com.google.appengine.api.users.User"
+	      factory-bean="userFactory" factory-method="getUser"
+	      scope="prototype"
+	/>
 
 	<!-- persistence manager -->
 	<bean id="persistenceManagerFactory" class="cz.juzna.pa165.cards.dao.jdo.PMF2" />
