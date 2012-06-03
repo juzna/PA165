@@ -6,12 +6,18 @@
 		<div class="span4">
 			<section id="browse-groups">
 				<header><h2>My groups <a class="btn btn-mini">Manage groups</a></h2></header>
-				<#if myGroups??>
-					<ul class="nav nav-tabs nav-stacked">
-						<#list myGroups as group>
-							<li class="group"><a href="#">${group.name}<span class="badge badge-info count">TODO</span></a></li>
-						</#list>
-					</ul>
+				<#if user??>
+					<#if groups??>
+						<ul class="nav nav-tabs nav-stacked">
+							<#list groups as group>
+								<li class="group <#if group == activeGroup>active</#if>" data-id="${group.key.id}">
+									<a href="/browse/?group=${group.key.id}">${group.name}</a>
+								</li>
+							</#list>
+						</ul>
+					<#else>
+						<p class="well">No groups</p>
+					</#if>
 				<#else>
 					<p class="well">Auth area</p>
 				</#if>
@@ -22,7 +28,7 @@
 				<#if recentPublicCards??>
 					<ul>
 						<#list recentPublicCards as card>
-							<li><a href="/browse/card/${card.key}">${card.name}</a></li>
+							<li><a href="/browse/card/${card.key.id}/">${card.name}</a></li>
 						</#list>
 					</ul>
 				<#else>

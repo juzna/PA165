@@ -4183,6 +4183,9 @@ h1 {
   margin-bottom: 20px;
   padding: 20px;
 }
+#browse-card-billboard .card-image img {
+  width: 100%;
+}
 body {
   background: #F5F5F5;
 }
@@ -4203,6 +4206,52 @@ dd {
 }
 dl {
   margin: 0px;
+}
+li.group {
+  position: relative;
+}
+li.group .form-delete {
+  position: absolute;
+  right: 10px;
+  top: 9px;
+  display: inline;
+}
+li.group:hover .form-delete .btn {
+  color: #ffffff;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  background-color: #da4f49;
+  background-image: -moz-linear-gradient(top, #ee5f5b, #bd362f);
+  background-image: -ms-linear-gradient(top, #ee5f5b, #bd362f);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ee5f5b), to(#bd362f));
+  background-image: -webkit-linear-gradient(top, #ee5f5b, #bd362f);
+  background-image: -o-linear-gradient(top, #ee5f5b, #bd362f);
+  background-image: linear-gradient(top, #ee5f5b, #bd362f);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ee5f5b', endColorstr='#bd362f', GradientType=0);
+  border-color: #bd362f #bd362f #802420;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+  *background-color: #bd362f;
+  /* Darken IE7 buttons by default so they stand out more given they won't have borders */
+
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+}
+li.group:hover .form-delete .btn:hover,
+li.group:hover .form-delete .btn:active,
+li.group:hover .form-delete .btn.active,
+li.group:hover .form-delete .btn.disabled,
+li.group:hover .form-delete .btn[disabled] {
+  background-color: #bd362f;
+  *background-color: #a9302a;
+}
+li.group:hover .form-delete .btn:active,
+li.group:hover .form-delete .btn.active {
+  background-color: #942a25 \9;
+}
+li.group:hover .form-delete .btn .caret {
+  border-top-color: #ffffff;
+  border-bottom-color: #ffffff;
+  opacity: 0.75;
+  filter: alpha(opacity=75);
 }
 table td {
   vertical-align: middle !important;

@@ -65,7 +65,7 @@ public class AccountController extends BaseController {
 	    model.addAttribute("userCards", new ArrayList<Card>());
 	}
 
-	model.addAttribute("publicCards", cards.getPublicCards());
+	model.addAttribute("publicCards", cards.getCards(0, 999, getUser()));
 
 	return "accountManage";
     }
@@ -114,46 +114,22 @@ public class AccountController extends BaseController {
 	return "accountGroups";
     }
 
-    /**
-     * Pripravuje novou cistou kartu na nahrani tezko vam tam muzu dat ralated
-     * vizitky kdyz nevim co bude nahrano :)
-     *
-     * @param model
-     * @param request
-     * @return predani rizeni do /views/accountUpload.ftl
-     */
-    @RequestMapping(value = "/upload", method = RequestMethod.GET)
-    public String accountUpload(ModelMap model, HttpServletRequest request) {
-		Card card = new Card();
-		model.addAttribute("card", card); // cista karta pro prazdny formular(get all card attributes (id, name, owner, addedAt, private, ...)
-		// model.addAttribute("relatedCards", ‚Ä¶); // get Related cards, for example siblings in database
-		// model.addAttribute("relatedGroups", ‚Ä¶); // get user's groups which contains this card
-	
-		return "account/upload";
-    }
 
-    /**
-     * Zpracovani karty po vyplneni formulare zatim to nejjednodussi - zadna
-     * kontrola
-     *
-     * @param card
-     * @param model
-     * @param request
-     * @throws IOException
-     */
-    @RequestMapping(value = "/upload", method = RequestMethod.POST)
-    public String accountUploadProcess(@RequestParam("form-upload-image") MultipartFile file, MultipartHttpServletRequest request, Model model) throws IOException {
-		model.addAttribute("name", request.getParameter("form-upload-name"));
-		model.addAttribute("privacy", request.getParameter("form-upload-privacy"));
-		model.addAttribute("file", file.getSize());
-		
+	@RequestMapping(value = "/upload", method = RequestMethod.GET)
+	public String accountUpload(ModelMap model, HttpServletRequest request) {
+		return "account/upload";
+	}
+
+
+	@RequestMapping(value = "/upload", method = RequestMethod.POST)
+	public String accountUploadProcess(@RequestParam("form-upload-image") MultipartFile file, Model model, MultipartHttpServletRequest request) throws IOException {
+
 		// Save image to blob
-	    BlobKey blobKey = BlobHelper.addImage(file.getBytes());
+		BlobKey blobKey = BlobHelper.addImage(file.getBytes());
 		
-		Card card = new Card(user, blobKey, request.getParameter("form-upload-name"), false); // TODO
+		Card card = new Card(getUser(), blobKey, request.getParameter("form-upload-name"), ((request.getParameter("form-upload-privacy").equalsIgnoreCase("private")) ? true : false));
 		cards.addCard(card);
 		
-		return "account/upload-completed";
-		// return "redirect:/account/manager/" + card.getGaeKey();// redirect to /account/manager/{cardId}
+		return "redirect:/browse/card/" + card.getKey().getId() + "/";
     }
 }

@@ -29,48 +29,54 @@ public class BrowseController extends BaseController {
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
     public String browse(Model model, HttpServletRequest request) {
-		// Paging
+		
+		// Pagination
 		Integer offset, limit;
 		if (request.getParameter("page") != null) {
-			Integer page = Integer.parseInt(request.getParameter("page"));
-			offset = page * CARDS_PER_PAGE;
+			offset = Integer.parseInt(request.getParameter("page")) * CARDS_PER_PAGE;
 			limit = CARDS_PER_PAGE;
 		} else {
 			offset = 0;
 			limit = CARDS_PER_PAGE;
 		}
-
-		model.addAttribute("cards", getUser() == null ? cards.getCards(offset, limit) : cards.getCards(offset, limit, getUser())); // browse panel
-		model.addAttribute("recentPublicCards", cards.getCards(0, 12)); // side panel
-		if (getUser() != null) {
-		    model.addAttribute("myGroups", new ArrayList<Group>(groups.findGroupsByOwner(getUser()))); // side panel
+		
+		if (request.getParameter("group") != null) {
+			Group group = groups.findGroupById(Long.valueOf(request.getParameter("group")));
+			if (group != null && group.getOwner().equals(getUser())) {
+				model.addAttribute("cards", groups.getCardsInGroup(group));
+				model.addAttribute("activeGroup", group);
+			}
+		} else {
+			model.addAttribute("cards", getUser() == null ? cards.getCards(offset, limit) : cards.getCards(offset, limit, getUser()));
 		}
+				
+		model.addAttribute("recentPublicCards", cards.getCards(0, 12)); // side panel
+		if (getUser() != null) {model.addAttribute("groups", new ArrayList<Group>(groups.findGroupsByOwner(getUser())));}
 		
 		return "browse/default";
-    }
-    
-    @RequestMapping(value = "/card/{cardId}", method = RequestMethod.GET)
-    public String browseCard(@PathVariable Long cardId, Model model) {
+	}
+	
+	@RequestMapping(value = "/card/{cardId}", method = RequestMethod.GET)
+	public String browseCard(@PathVariable Long cardId, Model model) {
 		Card card = cards.findCardById(cardId);
 	
 		if (card != null && (!card.isPrivate() || card.getOwner().equals(getUser()))) {
-		    model.addAttribute("card", card);
-		    if (getUser() != null) {
-		    	model.addAttribute("groupsOfCard", cards.getGroupsOfCard(card, getUser()));
-			    model.addAttribute("allUsersGroups", groups.findGroupsByOwner(getUser()));
-		    }
+			model.addAttribute("card", card);
+			if (getUser() != null) {
+				model.addAttribute("groupsOfCard", cards.getGroupsOfCard(card, getUser()));
+				model.addAttribute("allUsersGroups", groups.findGroupsByOwner(getUser()));
+			}
 		}
 		
 		// model.addAttribute("relatedCards", …); // get Related cards, for example siblings in database
-		// model.addAttribute("relatedGroups", …); // get user's groups which contains this card
 	
 		return "browse/card";
-    }
-    
-    
-    @RequestMapping(value = "/card/{cardId}", method = RequestMethod.POST, params="do=addTag")
-    public String browseCardAddTag(@PathVariable Long cardId, Model model, HttpServletRequest request) {
-    	
+	}
+	
+
+	@RequestMapping(value = "/card/{cardId}", method = RequestMethod.POST, params="do=addTag")
+	public String browseCardAddTag(@PathVariable Long cardId, Model model, HttpServletRequest request) {
+		
 		Card card = cards.findCardById(cardId);
 		Tag tag = new Tag(request.getParameter("tagger-key"), request.getParameter("tagger-value"), getUser(), false);
 		cards.addTag(card, tag);
@@ -78,97 +84,41 @@ public class BrowseController extends BaseController {
 		return "redirect:/browse/card/" + cardId +"/";
     }
     
-    @RequestMapping(value = "/card/{cardId}", method = RequestMethod.POST, params="do=addToGroup")
-    public String browseCardAddtoGroup(@PathVariable Long cardId, Model model, HttpServletRequest request) {
-    	
-    	Card card = cards.findCardById(cardId);
-    	
-    	Group group = null;
-    	if (request.getParameter("grouper-name") != null) { // create new group
-    		String groupName = request.getParameter("grouper-name");
-    		group = groups.addGroup(new Group(groupName, getUser()));
-    	} else if (request.getParameter("grouper-id") != null) { // add to existing
-    		Long groupId = Long.parseLong(request.getParameter("groupId"));
-    		group = groups.findGroupById(groupId);
+	@RequestMapping(value = "/card/{cardId}", method = RequestMethod.POST, params="do=addToGroup")
+	public String browseCardAddtoGroup(@PathVariable Long cardId, Model model, HttpServletRequest request) {
+		
+		Card card = cards.findCardById(cardId);
+		
+		Group group = null;
+		if (request.getParameter("grouper-name") != null) { // add to new group
+			String groupName = request.getParameter("grouper-name");
+			group = groups.addGroup(new Group(groupName, getUser()));
+		} else if (request.getParameter("grouper-id") != null) { // add to existing group
+			Long groupId = Long.valueOf(request.getParameter("grouper-id"));
+			group = groups.findGroupById(groupId);
 		}
-    	
-    	groups.addCardToGroup(group, card);
-    	
-    	return "redirect:/browse/card/" + cardId +"/";
-    	
-    }
-
-    
-    /*
-    @RequestMapping(value = "/group/{groupId}", method = RequestMethod.GET)
-    public String browseGroup(ModelMap model, HttpServletRequest request, @PathVariable Key groupId) {
-	Group group = groups.findGroupByKey(groupId);
-	List<Card> groupCards = new ArrayList<Card>();
-	if (group != null && group.getOwner().equals(getUser())) {
-	    groupCards = groups.getCardsInGroup(group);
-	} else {
-	    group = null;
+		
+		groups.addCardToGroup(group, card);
+		
+		return "redirect:/browse/card/" + cardId +"/";
+		
 	}
-	model.addAttribute("cards", groupCards); //get all cards in group
-	model.addAttribute("group", group);
-
-	return "browseGroup";
-    }
-
-   
-    @RequestMapping(value = "/group/{groupId}", method = RequestMethod.POST)
-    public String updateGroup(@ModelAttribute Group group, ModelMap model, HttpServletRequest request, @PathVariable Key groupId) {
-	Group groupOld = groups.findGroupByKey(groupId);
-	List<Card> groupCards = new ArrayList<Card>();
-	if (groupOld != null && groupOld.getOwner().equals(getUser())) {
-	    groups.refreshGroup(group);
-	    groupCards = groups.getCardsInGroup(group);
-	} else {
-	    group = null;
+	
+	@RequestMapping(value = "/card/{cardId}", method = RequestMethod.POST, params="do=removeFromGroup")
+	public String browseCardRemoveFromGroup(@PathVariable Long cardId, Model model, HttpServletRequest request) {
+		
+		Card card = cards.findCardById(cardId);
+		
+		Group group = null;
+		if (request.getParameter("groupId") != null) {
+			Long groupId = Long.valueOf(request.getParameter("groupId"));
+			group = groups.findGroupById(groupId);
+		}
+		
+		groups.removeCardFomGroup(group, card);
+		
+		return "redirect:/browse/card/" + cardId +"/";
+		
 	}
-	model.addAttribute("cards", groupCards); //get all cards in group
-	model.addAttribute("group", group);
-
-	return "browseGroup";
-    }
-    
-    @RequestMapping(value = "/group/{groupId}", method = RequestMethod.DELETE)
-    public String deleteGroup(ModelMap model, HttpServletRequest request, @PathVariable Key groupId) {
-	Group group = groups.findGroupByKey(groupId);
-
-	if (group != null && group.getOwner().equals(getUser())) {
-	    groups.removeGroup(group); // je u databaze kaskadove vymazavani nebo tady musim projit vsechny karty?
-	}
-
-	return "redirect:/browse/";
-    }
-    
-    @RequestMapping(value = "/card/{cardId}", method = RequestMethod.POST)
-    public String updateCard(@ModelAttribute Card card, ModelMap model, HttpServletRequest request, @PathVariable Key cardId) {
-	Card cardOld = cards.findCardByKey(cardId);
-
-	if (cardOld != null && (!cardOld.isPrivate() || cardOld.getOwner().equals(getUser()))) {
-	    cards.refreshCard(card);
-	    model.addAttribute("card", card); // get all card attributes (id, name, owner, addedAt, private, ...
-	    model.addAttribute("relatedGroups", cards.getGroupsOfCard(card));//
-	} else {
-	    model.addAttribute("card", null);
-	    model.addAttribute("relatedGroups", new ArrayList<Group>());
-	}
-	return "browseCard";
-    }
-
-    
-    @RequestMapping(value = "/card/{cardId}", method = RequestMethod.DELETE)
-    public String deleteCard(ModelMap model, HttpServletRequest request, @PathVariable Key cardId) {
-	Card card = cards.findCardByKey(cardId);
-
-	if (card != null && card.getOwner().equals(getUser())) {
-	    cards.removeCard(card);
-	}
-
-	return "redirect:/browse/";
-    }
-    */
 
 }

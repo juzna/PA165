@@ -6,7 +6,6 @@ import com.google.appengine.api.users.User;
 import java.io.Serializable;
 import java.util.*;
 import javax.jdo.annotations.*;
-import javax.persistence.*;
 
 @PersistenceCapable(detachable="true")
 public class Card implements Serializable {

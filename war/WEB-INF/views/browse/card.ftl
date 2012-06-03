@@ -38,13 +38,26 @@
 		</div>
 
 		<div class="span6">
+			<#if card.owner == user>
+				<section id="browse-card-ownership" class="marginer">
+					<p class="alert alert-info">This card belongs to you. <a href="/account/card/${card.key.id}/"><strong>Manage this card</strong></a></p>
+				</section>
+			</#if>
+		
 			<#if user??>
 				<section id="browse-card-belongs">
-					<header><h3>Groups containing this card <a class="btn btn-mini">Add to group</a></h3></header>
+					<header><h3>Groups containing this card</h3></header>
 					<#if groupsOfCard??>
 					<ul class="nav nav-tabs nav-stacked">
 						<#list groupsOfCard as group>
-							<li class="group"><a href="/browse/group/${group.id}/">${group.name}</a></li>
+							<li class="group">
+								<form method="POST" class="form-delete">
+									<input type="hidden" name="do" value="removeFromGroup" />
+									<input type="hidden" name="groupId" value="${group.key.id}" />
+									<button type="submit" class="btn btn-mini">Remove</button>
+								</form>
+								<a href="/browse/?group=${group.key.id}">${group.name}</a>
+							</li>
 						</#list>
 					</ul>
 					<#else>
@@ -55,48 +68,34 @@
 				<p class="well">Auth area</p>
 			</#if>
 			
-			<#if card.owner == user>
-				<section id="browse-card-ownership" class="marginer">
-					<p class="alert alert-info">This card belongs to you. <a class="btn btn-primary">Manage this card</a></p>
-				</section>
-			</#if>
-			
 			<#if user??>
-				<section id="browse-card-addToGroupTemp">
-				<header><h4>Add to your group</h4></header>
-					<ul>
-					<#if allUsersGroups??>
-						<#list allUsersGroups as group>
-							<li class="group"><a href="#">${group.name}</a></li>
-						</#list>
-					<#else>
-						<p class="well">No data</p>
-					</#if>
-					</ul>
-					<form method="POST">
+				<section id="browse-card-addToGroup">
+				<header><h4>Add card to group</h4></header>
+					<form method="POST" class="form-horizontal">
 						<input type="hidden" name="do" value="addToGroup" />
-						<input class="grouper-name" name="grouper-name" type="text" placeholder="Group name">
-						<button class="grouper-submit btn" type="submit" >Add group</button>
+						<select name="grouper-id">
+							<#if allUsersGroups??>
+								<option value="">Select group...</option>
+								<#list allUsersGroups as group>
+									<option value="${group.key.id}">${group.name}</option>
+								</#list>
+							<#else>
+								<option value="">You have no groups</options>
+							</#if>
+						</select>
+						<button class="btn" type="submit" >Add to existing group</button>
+					</form>
+					
+					<form method="POST" class="form-horizontal">
+						<input type="hidden" name="do" value="addToGroup" />
+						<input name="grouper-name" type="text" placeholder="Group name">
+						<button class="btn" type="submit" >Add to new group</button>
 					</form>
 				</section>
 			</#if>
 			
 		</div>
 	</div>
-
-	<section id="browse-related">
-		<header><h2>Related cards <small>You may also like.</small></h2></header>
-		<div class="row-fluid">
-			{foreach $relatedCards as $card}
-			<div class="card card_thumb span4" data-cardId="{$card['id']}" {if ($iterator->counter % 3)  == 1}style="margin-left: 0;"{/if}>
-			<div class="card-image">
-				<img src="http://placekitten.com/300/200" />
-			</div>
-			<h4 class="card-name">{$card['name']}</h4>
-		</div>
-		{/foreach}
-</div>
-</section>
 </div>
 <#include "/layout/debug.ftl">
 <#include "/layout/footer.ftl">

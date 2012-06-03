@@ -58,10 +58,10 @@ public class JdoGroupDao implements GroupDao {
 
 		try {
 			tx.begin();
-			group = pm.getObjectById(Group.class, group.getGaeKey());
+			group = pm.getObjectById(Group.class, group.getKey());
 			for (int i = 0; i < cardKeys.size(); i++) {
 				card = pm.getObjectById(Card.class, iterator.next());
-				card.getGroupKeys().remove(group.getGaeKey());
+				card.getGroupKeys().remove(group.getKey());
 				pm.makePersistent(card);
 			}
 			pm.deletePersistent(group);
@@ -88,7 +88,7 @@ public class JdoGroupDao implements GroupDao {
 		}
 		pm = PMF.get().getPersistenceManager();
 		try {
-			group = pm.getObjectById(Group.class, group.getGaeKey());
+			group = pm.getObjectById(Group.class, group.getKey());
 			group.setName(newName);
 		} finally {
 			pm.close();
@@ -189,8 +189,8 @@ public class JdoGroupDao implements GroupDao {
 		try {
 			tx.begin();
 			card = pm.getObjectById(Card.class, card.getKey());
-			group = pm.getObjectById(Group.class, group.getGaeKey());
-			card.getGroupKeys().add(group.getGaeKey());
+			group = pm.getObjectById(Group.class, group.getKey());
+			card.getGroupKeys().add(group.getKey());
 			group.getCardKeys().add(card.getKey());
 			tx.commit();
 		} finally {
@@ -223,8 +223,8 @@ public class JdoGroupDao implements GroupDao {
 		try {
 			tx.begin();
 			card = pm.getObjectById(Card.class, card.getKey());
-			group = pm.getObjectById(Group.class, group.getGaeKey());
-			card.getGroupKeys().remove(group.getGaeKey());
+			group = pm.getObjectById(Group.class, group.getKey());
+			card.getGroupKeys().remove(group.getKey());
 			group.getCardKeys().remove(card.getKey());
 			tx.commit();
 		} finally {
@@ -268,13 +268,13 @@ public class JdoGroupDao implements GroupDao {
 		if (group == null) {
 			throw new IllegalArgumentException("Argument group is null");
 		}
-		if (group.getGaeKey() == null) {
+		if (group.getKey() == null) {
 			group = this.addGroup(group);
 		} else {
 			pm = PMF.get().getPersistenceManager();
 			pm.getFetchPlan().setGroup(FetchGroup.ALL);
 			try {
-				group = pm.getObjectById(Group.class, group.getGaeKey());
+				group = pm.getObjectById(Group.class, group.getKey());
 			} catch (JDOObjectNotFoundException e) {
 				throw new JDOObjectNotFoundException("Card is already deleted");
 			} finally {

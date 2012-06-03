@@ -15,13 +15,13 @@ public class Group implements Serializable {
 
 	@PrimaryKey
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-	private Key gaeKey;
-	
-	@Persistent
-	private String name;
+	private Key key;
 	
 	@Persistent
 	private User owner;
+	
+	@Persistent
+	private String name;
 	
 	@Persistent
 	@Temporal(javax.persistence.TemporalType.DATE)
@@ -41,12 +41,12 @@ public class Group implements Serializable {
 		this.owner = owner;
 	}
 
-	public Key getGaeKey() {
-		return gaeKey;
+	public Key getKey() {
+		return key;
 	}
 
-	public void setGaeKey(Key key) {
-		this.gaeKey = key;
+	public void setKey(Key key) {
+		this.key = key;
 	}
 
 	public String getName() {
@@ -90,7 +90,7 @@ public class Group implements Serializable {
 	    return false;
 	}
 	final Group other = (Group) obj;
-	if (this.gaeKey != other.gaeKey && (this.gaeKey == null || !this.gaeKey.equals(other.gaeKey))) {
+	if (this.key != other.key && (this.key == null || !this.key.equals(other.key))) {
 	    return false;
 	}
 	return true;
@@ -99,7 +99,7 @@ public class Group implements Serializable {
     @Override
     public int hashCode() {
 	int hash = 3;
-	hash = 97 * hash + (this.gaeKey != null ? this.gaeKey.hashCode() : 0);
+	hash = 97 * hash + (this.key != null ? this.key.hashCode() : 0);
 	return hash;
     }
 	

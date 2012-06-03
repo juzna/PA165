@@ -10,12 +10,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.users.User;
-import com.google.appengine.api.users.UserServiceFactory;
 
 import cz.juzna.pa165.cards.dao.CardDao;
 import cz.juzna.pa165.cards.dao.GroupDao;
@@ -76,8 +74,8 @@ public class SystemController {
 
 
 		// Put it into two groups
-		card.getGroupKeys().add(g1.getGaeKey());
-		card.getGroupKeys().add(g2.getGaeKey());
+		card.getGroupKeys().add(g1.getKey());
+		card.getGroupKeys().add(g2.getKey());
 
 		// store it
 		writer.println("card storing");
@@ -86,7 +84,7 @@ public class SystemController {
 		writer.println("OK");
 
 
-		writer.println("Group keys: " + g1.getGaeKey() + ", " + g2.getGaeKey() + ", " + g3.getGaeKey());
+		writer.println("Group keys: " + g1.getKey() + ", " + g2.getKey() + ", " + g3.getKey());
 		writer.println("Card key: " + card.getKey());
 	}
     
