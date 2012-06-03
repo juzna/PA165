@@ -433,7 +433,8 @@ public class JdoCardDao implements CardDao {
 
 			// Limit
 			if (result.size() > 0) {
-				result = result.subList(offset, Math.min(offset + limit, result.size()));
+				if (offset >= result.size()) result = new ArrayList<Card>(); // we're too far
+				else result = result.subList(offset, Math.min(offset + limit, result.size()));
 			}
 
 
