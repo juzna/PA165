@@ -7,11 +7,6 @@ import cz.juzna.pa165.cards.dao.CardDao;
 import cz.juzna.pa165.cards.dao.GroupDao;
 import cz.juzna.pa165.cards.domain.Card;
 import cz.juzna.pa165.cards.domain.Group;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import javax.servlet.http.HttpServletRequest;
-
 import cz.juzna.pa165.cards.util.BlobHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,6 +18,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 @RequestMapping("account/*")
@@ -65,7 +65,7 @@ public class AccountController extends BaseController {
 	    model.addAttribute("userCards", new ArrayList<Card>());
 	}
 
-	model.addAttribute("publicCards", cards.getPublicCards());
+	model.addAttribute("publicCards", cards.getCards(0, 24));
 
 	return "accountManage";
     }
@@ -136,7 +136,6 @@ public class AccountController extends BaseController {
      * Zpracovani karty po vyplneni formulare zatim to nejjednodussi - zadna
      * kontrola
      *
-     * @param card
      * @param model
      * @param request
      * @throws IOException
