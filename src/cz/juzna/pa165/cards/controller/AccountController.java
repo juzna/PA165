@@ -76,12 +76,13 @@ public class AccountController extends BaseController {
 			return "account/forbidden";
 		}
 		
-		card.setName(request.getParameter("form-editor-name"));
-		if(request.getParameter("form-editor-privacy") != null) {
-			card.setPrivacy( (request.getParameter("form-editor-privacy").equalsIgnoreCase("private")) ? true : false );
+		if(request.getParameter("form-editor-name") != null) {
+			cards.changeCardName(card, request.getParameter("form-editor-name"));
 		}
 		
-		cards.changeCard(card);
+		if(request.getParameter("form-editor-privacy") != null) {
+			cards.changeCardPrivacy(card, ( request.getParameter("form-editor-privacy").equalsIgnoreCase("private")) ? true : false );
+		}
 		
 		return "redirect:/account/card/" + cardId +"/";
 	}
@@ -110,8 +111,7 @@ public class AccountController extends BaseController {
 	public String accountGroupsEdit(ModelMap model, HttpServletRequest request) {
 		
 		Group group = groups.findGroupById(Long.valueOf(request.getParameter("form-groups-id")));
-		group.setName(request.getParameter("form-groups-name"));
-		groups.changeGroup(group);
+		groups.changeGroupName(group, request.getParameter("form-groups-name"));
 		
 		return "redirect:/account/groups";
 	}

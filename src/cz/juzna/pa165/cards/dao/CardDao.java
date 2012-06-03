@@ -17,6 +17,8 @@ public interface CardDao {
 	public void removeCard(Card card);
 	
 	public void changeCard(Card card);
+	public void changeCardName(Card card, String name);
+	public void changeCardPrivacy(Card card, boolean privacy);
 
 	public List<Card> getAllCards();
 

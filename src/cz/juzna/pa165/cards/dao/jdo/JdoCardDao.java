@@ -72,6 +72,28 @@ public class JdoCardDao implements CardDao {
 			pm.close();
 		}
 	}
+	
+	@Override
+	public void changeCardName(Card card, String name) {
+		card.setName(name);
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		try {
+			pm.makePersistent(card);
+		} finally {
+			pm.close();
+		}
+	}
+	
+	@Override
+	public void changeCardPrivacy(Card card, boolean privacy) {
+		card.setPrivacy(privacy);
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		try {
+			pm.makePersistent(card);
+		} finally {
+			pm.close();
+		}
+	}
 
 	@Override
 	public List<Card> getAllCards() {
@@ -94,7 +116,16 @@ public class JdoCardDao implements CardDao {
 		}
 		
 		pm = PMF.get().getPersistenceManager();
-		return pm.detachCopy(pm.getObjectById(Card.class, key));
+		try {
+			return pm.getObjectById(Card.class, key);
+		} finally {
+			pm.close();
+		}
+	}
+	
+	@Override
+	public Card findCardById(Long cardId) {
+		return this.findCardByKey(KeyFactory.createKey("Card", cardId));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -401,9 +432,6 @@ public class JdoCardDao implements CardDao {
 		return card;
 	}
 
-	@Override
-	public Card findCardById(Long cardId) {
-		return this.findCardByKey(KeyFactory.createKey("Card", cardId));
-	}
+	
 
 }

@@ -4183,6 +4183,9 @@ h1 {
   margin-bottom: 20px;
   padding: 20px;
 }
+.row-fluid .card_thumb.span4:nth-child(3n+1) {
+  margin-left: 0px;
+}
 #browse-card-billboard .card-image img {
   width: 100%;
 }
