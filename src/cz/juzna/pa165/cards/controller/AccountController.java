@@ -59,8 +59,8 @@ public class AccountController extends BaseController {
      */
     @RequestMapping(value = "/manage", method = RequestMethod.GET)
     public String accountManage(ModelMap model, HttpServletRequest request) {
-	if (user != null) {
-	    model.addAttribute("userCards", cards.findCardsByOwner(user)); // all user's cards
+	if (getUser() != null) {
+	    model.addAttribute("userCards", cards.findCardsByOwner(getUser())); // all user's cards
 	} else {
 	    model.addAttribute("userCards", new ArrayList<Card>());
 	}
@@ -83,7 +83,7 @@ public class AccountController extends BaseController {
     public String accountCard(ModelMap model, HttpServletRequest request, @PathVariable Key cardId) {
 	Card card = cards.findCardByKey(cardId);
 	if (card != null) {
-	    if (card.isPrivate() && !card.getOwner().equals(user)) {
+	    if (card.isPrivate() && !card.getOwner().equals(getUser())) {
 		card = null;
 	    }
 	}
@@ -105,8 +105,8 @@ public class AccountController extends BaseController {
     public String accountGroups(ModelMap model, HttpServletRequest request) {
 	List<Group> userGroups = new ArrayList<Group>();
 
-	if (user != null) {
-	    userGroups = groups.findGroupsByOwner(user);
+	if (getUser() != null) {
+	    userGroups = groups.findGroupsByOwner(getUser());
 	}
 
 	model.addAttribute("groups", userGroups); // all users groups
@@ -149,7 +149,7 @@ public class AccountController extends BaseController {
 		// Save image to blob
 	    BlobKey blobKey = BlobHelper.addImage(file.getBytes());
 		
-		Card card = new Card(user, blobKey, request.getParameter("form-upload-name"), false); // TODO
+		Card card = new Card(getUser(), blobKey, request.getParameter("form-upload-name"), false); // TODO
 		cards.addCard(card);
 		
 		return "account/upload-completed";
