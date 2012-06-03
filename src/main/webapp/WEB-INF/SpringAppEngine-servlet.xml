@@ -10,6 +10,9 @@
 
 		<context:component-scan base-package="cz.juzna.pa165.cards.controller" />
 
+		<!-- automatically find controllers by their annotations -->
+		<mvc:annotation-driven />
+
         <mvc:resources mapping="/resources/**" location="/resources/" />
 
 		<bean id="freemarkerConfig" class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
