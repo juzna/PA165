@@ -336,7 +336,7 @@ public class JdoCardDao implements CardDao {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<Card> _getCards(Integer offset, Integer limit, User owner) {
+	protected List<Card> _getCards(Integer offset, Integer limit, User owner) {
 		// TODO: process offset, limit
 		pm = PMF.get().getPersistenceManager();
 		ArrayList<Card> cardList = new ArrayList<Card>();
