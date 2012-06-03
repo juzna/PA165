@@ -7,6 +7,7 @@ import cz.juzna.pa165.cards.dao.CardDao;
 import cz.juzna.pa165.cards.domain.Card;
 import cz.juzna.pa165.cards.domain.Group;
 import cz.juzna.pa165.cards.domain.Tag;
+import cz.juzna.pa165.cards.util.CardByDateComparator;
 
 import javax.jdo.*;
 import java.util.*;
@@ -337,7 +338,11 @@ public class JdoCardDao implements CardDao {
 
 	@SuppressWarnings("unchecked")
 	protected List<Card> _getCards(Integer offset, Integer limit, User owner) {
-		// TODO: process offset, limit
+		// Hijack to a hack method ;)
+		if (owner != null) {
+			return _getCardsFuckMeIfUCan(offset, limit, owner);
+		}
+
 		pm = PMF.get().getPersistenceManager();
 		ArrayList<Card> cardList = new ArrayList<Card>();
 		List<Card> result = null;
@@ -351,12 +356,11 @@ public class JdoCardDao implements CardDao {
 				result = (List<Card>) query.execute();
 
 			} else {
-				// Load mine TODO: should load mine + public, but appengine can't do that
-				query.setFilter("owner == ownerParam");
-				query.declareImports("import com.google.appengine.api.users.User");
-				query.declareParameters("User ownerParam");
-				query.setRange(offset, offset + limit);
-				result = (List<Card>) query.execute(owner);
+//				query.setFilter("owner == ownerParam");
+//				query.declareImports("import com.google.appengine.api.users.User");
+//				query.declareParameters("User ownerParam");
+//				query.setRange(offset, offset + limit);
+//				result = (List<Card>) query.execute(owner);
 			}
 
 
@@ -364,7 +368,46 @@ public class JdoCardDao implements CardDao {
 			query.closeAll();
 			pm.close();
 		}
+
 		return result;
+	}
+
+	/** AppEngine can't do this in database, so we have to fetch all the data and then filter and sort it */
+	@SuppressWarnings("unchecked")
+	protected List<Card> _getCardsFuckMeIfUCan(Integer offset, Integer limit, User owner) {
+		pm = PMF.get().getPersistenceManager();
+		List<Card> result = new ArrayList<Card>(), tmp;
+		Query query = null;
+
+
+		try {
+			// Fetch all
+			query = pm.newQuery(Card.class);
+			tmp = (List<Card>) query.execute();
+
+			// Filter
+			for(Card card : tmp) {
+				if ( ! card.getPrivacy()  || card.getOwner().equals(owner)) {
+					result.add(card);
+				}
+			}
+
+			// Sort
+			Collections.sort(result, new CardByDateComparator());
+
+			// Limit
+			if (result.size() > 0) {
+				result = result.subList(offset, Math.min(offset + limit, result.size() - 1));
+			}
+
+
+			// We're done? It was pretty easy Mr. Watson, wasn't it?
+			return result;
+
+		} finally {
+			query.closeAll();
+			pm.close();
+		}
 	}
 
 	@Override
