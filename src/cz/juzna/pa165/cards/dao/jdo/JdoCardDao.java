@@ -365,7 +365,8 @@ public class JdoCardDao implements CardDao {
 				result = (List<Card>) query.execute();
 
 			} else {
-				query.setFilter("privacy == false || owner == ownerParam");
+				// Load mine TODO: should load mine + public, but appengine can't do that
+				query.setFilter("owner == ownerParam");
 				query.declareImports("import com.google.appengine.api.users.User");
 				query.declareParameters("User ownerParam");
 				result = (List<Card>) query.execute(owner);
