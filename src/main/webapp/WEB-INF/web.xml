@@ -10,7 +10,7 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>SpringAppEngine</servlet-name>
-		<url-pattern>/</url-pattern>
+		<url-pattern>/*</url-pattern>
 	</servlet-mapping>
 
 
@@ -25,7 +25,7 @@
 
 	   Ugly, but dunno better solution and dont wanna waste more time on it ;)
 	-->
-	<servlet>
+<!--	<servlet>
 		<servlet-name>dbWriteServlet</servlet-name>
 		<servlet-class>cz.juzna.pa165.cards.servlets.DbWriteServlet</servlet-class>
 	</servlet>
@@ -40,5 +40,5 @@
 	<servlet-mapping>
 		<servlet-name>dbReadServler</servlet-name>
 		<url-pattern>/dbReadTest</url-pattern>
-	</servlet-mapping>
+	</servlet-mapping>-->
 </web-app>
