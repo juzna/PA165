@@ -15,6 +15,12 @@
   
   <sessions-enabled>true</sessions-enabled>
 
+
+	<inbound-services>
+		<!-- allow receiving emails to controllers -->
+		<service>mail</service>
+	</inbound-services>
+
   <!--
     HTTP Sessions are disabled by default. To enable HTTP sessions specify:
 
