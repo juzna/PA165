@@ -13,10 +13,10 @@ import java.util.Map;
 public interface CardDao {
 
 	public Card addCard(Card card);
-
+	
 	public void removeCard(Card card);
 	
-	public Card changeCardPrivacy(Card card);
+	public void changeCard(Card card);
 
 	public List<Card> getAllCards();
 

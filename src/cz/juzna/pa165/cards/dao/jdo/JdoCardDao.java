@@ -64,28 +64,13 @@ public class JdoCardDao implements CardDao {
 	}
 	
 	@Override
-	public Card changeCardPrivacy(Card card)
-			throws IllegalArgumentException, JDOObjectNotFoundException {
+	public void changeCard(Card card) throws IllegalArgumentException, JDOObjectNotFoundException {
+		pm = PMF.get().getPersistenceManager();
 		try {
-			card = this.refreshCard(card);
-		} catch (IllegalArgumentException e) {
-			// card is null
-			throw e;
-		} catch (JDOObjectNotFoundException e) {
-			// card not in DB
-			throw e;
-		}
-		
-//		pm = PMF.get().getPersistenceManager();
-		pm.getFetchPlan().setGroup(FetchGroup.ALL);
-		try {
-			card = pm.getObjectById(Card.class, card.getKey());
-			card.setPrivacy(!card.isPrivate());
+			pm.makePersistent(card);
 		} finally {
-//			pm.close();
+			pm.close();
 		}
-		
-		return card;
 	}
 
 	@Override
@@ -109,7 +94,7 @@ public class JdoCardDao implements CardDao {
 		}
 		
 		pm = PMF.get().getPersistenceManager();
-		return pm.getObjectById(Card.class, key);
+		return pm.detachCopy(pm.getObjectById(Card.class, key));
 	}
 
 	@SuppressWarnings("unchecked")

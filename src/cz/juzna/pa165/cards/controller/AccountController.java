@@ -34,73 +34,59 @@ public class AccountController extends BaseController {
     private CardDao cards;
     @Autowired
     private GroupDao groups;
-
 	@Autowired
 	private User user;
-
-
+	
 	public AccountController() {
-		// Debug
-		System.out.println("Creating account controller");
-	}
-
-
-	/**
-     * Pripravuje informace na stranku o uzivateli "user" - uzivatel
-     *
-     * @param model
-     * @param request
-     * @return predani rizeni do /views/account.ftl
-     */
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String account(ModelMap model, HttpServletRequest request) {
-    	return "account/default";
-    }
-
-    /**
-     * Pripravuje vsechny karty daneho uzivatele, seznamy mohou byt prazdne
-     * "publicCard" - seznam verejnych karet "userCards" - seznam uzivatelovych
-     * karet
-     *
-     * @param model
-     * @param request
-     * @return predani rizeni do /views/accountManage.ftl
-     */
-    @RequestMapping(value = "/manage", method = RequestMethod.GET)
-    public String accountManage(ModelMap model, HttpServletRequest request) {
-		if (user != null) {
-		    model.addAttribute("userCards", cards.findCardsByOwner(user)); // all user's cards
-		} else {
-		    model.addAttribute("userCards", new ArrayList<Card>());
+		if (getUser() == null) {
+			//TODO: Forbid access
 		}
-	
-		model.addAttribute("publicCards", cards.getCards(0, 999, getUser()));
-	
-		return "accountManage";
-    }
-
-    /**
-     * Pripravuje vizitku na zobrazeni "card" - null nebo vizitka (null -
-     * nenalezena nebo nema p≈ô√≠stup)
-     *
-     * @param model
-     * @param request
-     * @param cardId - id zobrazovane vizitky
-     * @return predani rizeni do /views/accountCard.ftl
-     */
-    @RequestMapping(value = "/card/{cardId}", method = RequestMethod.GET)
-    public String accountCard(ModelMap model, HttpServletRequest request, @PathVariable Key cardId) {
-	Card card = cards.findCardByKey(cardId);
-	if (card != null) {
-	    if (card.isPrivate() && !card.getOwner().equals(user)) {
-		card = null;
-	    }
 	}
 
-	model.addAttribute("card", card); // card info
+	
+	@RequestMapping(value = "/", method = RequestMethod.GET)
+	public String account(Model model, HttpServletRequest request) {
+		return "account/default";
+	}
 
-	return "accountCard";
-    }
+	@RequestMapping(value = "/cards", method = RequestMethod.GET)
+	public String accountCards(Model model, HttpServletRequest request) {
+		model.addAttribute("cards", cards.findCardsByOwner(user));
+		return "account/cards";
+	}
+
+
+	@RequestMapping(value = "/card/{cardId}", method = RequestMethod.GET)
+	public String accountCard(@PathVariable Long cardId, Model model, HttpServletRequest request) {
+		
+		Card card = cards.findCardById(cardId);
+		if (card.isPrivate() && !card.getOwner().equals(getUser())) {
+			return "account/forbidden";
+		}
+
+		model.addAttribute("card", card);
+		return "account/card";
+	}
+	
+	@RequestMapping(value = "/card/{cardId}", method = RequestMethod.POST, params="do=edit")
+	public String accountCardEdit(@PathVariable Long cardId, Model model, HttpServletRequest request) {
+		
+		Card card = cards.findCardById(cardId);
+		if (card.isPrivate() && !card.getOwner().equals(getUser())) {
+			return "account/forbidden";
+		}
+		
+		card.setName(request.getParameter("form-editor-name"));
+		if(request.getParameter("form-editor-privacy") != null) {
+			card.setPrivacy( (request.getParameter("form-editor-privacy").equalsIgnoreCase("private")) ? true : false );
+		}
+		System.out.print("Byl sem tady");
+		cards.changeCard(card);
+		
+		return "redirect:/account/card/" + cardId +"/";
+	}
+	
+	
 
     /**
      * Pripravuje vsechny skupiny daneho uzivatele "groups" - skupiny uzivatele,

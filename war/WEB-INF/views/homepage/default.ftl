@@ -20,7 +20,7 @@
 									<img src="/cardImage/${card.img.getKeyString()}" />
 								</div>
 								<div class="card-meta">
-									<p>By <a href="#">${card.owner!"Unknown"}</a> at ${card.created?date}</p>
+									<p>By <a href="#">${card.owner}</a> at ${card.created?date}</p>
 								</div>
 							</div>
 							<div class="span6">

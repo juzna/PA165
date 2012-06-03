@@ -2,17 +2,7 @@
 <#include "/layout/navigation.ftl">
 <div class="container">
 	<div class="row-fluid">
-		<div class="span4">
-			<section id="browse-groups">
-				<header><h2>User area</h2></header>
-				<ul class="nav nav-tabs nav-stacked">
-					<li><a href="#">Overview</a></li>
-					<li><a href="#">Manage</a></li>
-					<li><a href="#">Upload</a></li>
-				</ul>
-			</section>
-		</div>
-
+		<#include "/account/_side.ftl">
 		<div class="span8">
 			<section id="account-panel">
 				<header><h2>Upload new card</h2></header>
@@ -24,11 +14,11 @@
 						</div>
 					</div>
 					<div class="control-group">
-			            <label class="control-label" for="form-upload-name">Name</label>
-			            <div class="controls">
-			            	<input type="text" id="form-upload-name" name="form-upload-name" />
-			            </div>
-			        </div>
+						<label class="control-label" for="form-upload-name">Name</label>
+						<div class="controls">
+							<input type="text" id="form-upload-name" name="form-upload-name" />
+						</div>
+					</div>
 					<div class="control-group">
 						<div class="controls">
 							<label class="radio">
