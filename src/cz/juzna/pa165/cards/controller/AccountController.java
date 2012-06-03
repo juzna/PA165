@@ -1,6 +1,11 @@
 package cz.juzna.pa165.cards.controller;
 
+import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.files.AppEngineFile;
+import com.google.appengine.api.files.FileService;
+import com.google.appengine.api.files.FileServiceFactory;
+import com.google.appengine.api.files.FileWriteChannel;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
@@ -9,6 +14,7 @@ import cz.juzna.pa165.cards.dao.GroupDao;
 import cz.juzna.pa165.cards.domain.Card;
 import cz.juzna.pa165.cards.domain.Group;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -154,13 +160,22 @@ public class AccountController extends BaseController {
     	
 		UserService userService = UserServiceFactory.getUserService();
 		User user = userService.getCurrentUser();
-			
+		
 		model.addAttribute("name", request.getParameter("form-upload-name"));
 		model.addAttribute("privacy", request.getParameter("form-upload-privacy"));
 		model.addAttribute("file", file.getSize());
 		
+		// Save image to blob
+		FileService fileService = FileServiceFactory.getFileService();
+		AppEngineFile newBlobFile = fileService.createNewBlobFile("image/jpeg");
+		boolean lock = true;
+		FileWriteChannel writeChannel = fileService.openWriteChannel(newBlobFile, lock);
+		writeChannel.write(ByteBuffer.wrap(file.getBytes()));
+		writeChannel.closeFinally();
+		BlobKey blobKey = fileService.getBlobKey(newBlobFile);	
 		
-	
+		Card card = new Card(user, blobKey, request.getParameter("form-upload-name"), false); // TODO
+		cards.addCard(card);
 		
 		return "account/upload-completed";
 		// return "redirect:/account/manager/" + card.getGaeKey();// redirect to /account/manager/{cardId}

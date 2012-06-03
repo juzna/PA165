@@ -17,15 +17,14 @@
 						<div class="card row-fluid">
 							<div class="span6">
 								<div class="card-image">
-									<img src="http://placekitten.com/300/200" />
+									<img src="/cardImage/${card.img.getKeyString()}" />
 								</div>
 								<div class="card-meta">
-									<p class="report"><a href="#">Report</a></p>
-									<p>By <a href="#">${card.owner!"Unknown"}</a> at ${card.created?date!"Unknown"}</p>
+									<p>By <a href="#">${card.owner!"Unknown"}</a> at ${card.created?date}</p>
 								</div>
 							</div>
 							<div class="span6">
-								<h4 class="card-name">${card.name!"Unknown"} (${card.tags?size})</h4>
+								<h4 class="card-name"><a href="/browse/card/${card.key.getId()}">${card.name!}</a></h4>
 								<dl class="card-tags">
 									<#list card.tags as tag>
 										<dt>${tag.tagKey}</dt><dd>${tag.content}</dd>

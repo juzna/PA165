@@ -181,10 +181,10 @@ public class JdoGroupDao implements GroupDao {
 
 		try {
 			tx.begin();
-			card = pm.getObjectById(Card.class, card.getGaeKey());
+			card = pm.getObjectById(Card.class, card.getKey());
 			group = pm.getObjectById(Group.class, group.getGaeKey());
 			card.getGroupKeys().add(group.getGaeKey());
-			group.getCardKeys().add(card.getGaeKey());
+			group.getCardKeys().add(card.getKey());
 			tx.commit();
 		} finally {
 			if (tx.isActive()) {
@@ -215,10 +215,10 @@ public class JdoGroupDao implements GroupDao {
 
 		try {
 			tx.begin();
-			card = pm.getObjectById(Card.class, card.getGaeKey());
+			card = pm.getObjectById(Card.class, card.getKey());
 			group = pm.getObjectById(Group.class, group.getGaeKey());
 			card.getGroupKeys().remove(group.getGaeKey());
-			group.getCardKeys().remove(card.getGaeKey());
+			group.getCardKeys().remove(card.getKey());
 			tx.commit();
 		} finally {
 			if (tx.isActive()) {

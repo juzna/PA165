@@ -1,6 +1,7 @@
 package cz.juzna.pa165.cards.controller;
 
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
@@ -13,6 +14,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
-@RequestMapping("/browse/*")
+@RequestMapping("/browse")
 public class BrowseController extends BaseController {
 
     @Autowired
@@ -28,45 +30,49 @@ public class BrowseController extends BaseController {
     @Autowired
     private GroupDao groups;
 
-    /**
-     * Zadne order nikde nemam, napiste seznam at si na to muzu udelat
-     * comparatory nebo se na to vykaslete - to bude nejjednodussi "groups" list
-     * vizitek citajici "limit" a na "offset" strance, muze byt prazdny zatim
-     * neosetruju vyjimky takze nezkousejte dat prilis velky offset a limit
-     *
-     * @param model
-     * @param request
-     * @return predani rizeni do /views/browse.ftl
-     */
+    
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String browse(ModelMap model, HttpServletRequest request) {
+    public String browse(Model model, HttpServletRequest request) {
 
-	UserService userService = UserServiceFactory.getUserService();
-	User user = userService.getCurrentUser();
-
-	Integer offset = Integer.getInteger(request.getParameter("offset")); //offset jako kolikata stranka
-	Integer limit = Integer.getInteger(request.getParameter("limit")); //pocet prvku na stranku
-
-	//model.addAttribute("cards", …); // get cards to display, consider offset, limit and order
-	if (user != null) {
-	    model.addAttribute("groups", new ArrayList<Group>(groups.findGroupsByOwner(user)).subList((offset * limit - 1), (offset * limit + limit - 1))); // get all user's groups to display in sidebar
-	} else {
-	    model.addAttribute("groups", new ArrayList<Group>());
-	}
-
-	return "browse";
+		UserService userService = UserServiceFactory.getUserService();
+		User user = userService.getCurrentUser();
+		
+		List<Card> publicCards = cards.getPublicCards();
+		model.addAttribute("cards", publicCards);
+	
+		Integer offset = Integer.getInteger(request.getParameter("offset")); //offset jako kolikata stranka
+		Integer limit = Integer.getInteger(request.getParameter("limit")); //pocet prvku na stranku
+		
+		// model.addAttribute("cards", new ArrayList<Card>(cards.getAllCards())); // browse panel
+		model.addAttribute("recentPublicCards", cards.getPublicCards()); // side panel
+		if (user != null) {
+		    model.addAttribute("myGroups", new ArrayList<Group>(groups.findGroupsByOwner(user))); // side panel
+		}
+		
+		return "browse/default";
+    }
+    
+    @RequestMapping(value = "/card/{cardId}", method = RequestMethod.GET)
+    public String browseCard(@PathVariable Long cardId, Model model) {
+    	
+    	UserService userService = UserServiceFactory.getUserService();
+		User user = userService.getCurrentUser();
+	
+		Card card = cards.findCardById(cardId);
+	
+		if (card != null && (!card.isPrivate() || card.getOwner().equals(user))) {
+		    model.addAttribute("card", card);
+		    model.addAttribute("relatedGroups", cards.getGroupsOfCard(card));
+		}
+		
+		// model.addAttribute("relatedCards", …); // get Related cards, for example siblings in database
+		// model.addAttribute("relatedGroups", …); // get user's groups which contains this card
+	
+		
+		return "browse/card";
     }
 
-    /**
-     * Skupina vizitek a vsechny obsazene vizitky "cards" - vizitky ve skupine -
-     * muze byt prazdna "group" - skupina vizitek, muze byt null - neni majitel
-     * nebo skupina neexistuje
-     *
-     * @param model
-     * @param request
-     * @param groupId - id skupiny
-     * @return predani rizeni do /views/browseGroup.ftl
-     */
+    /*
     @RequestMapping(value = "/group/{groupId}", method = RequestMethod.GET)
     public String browseGroup(ModelMap model, HttpServletRequest request, @PathVariable Key groupId) {
 	UserService userService = UserServiceFactory.getUserService();
@@ -85,15 +91,6 @@ public class BrowseController extends BaseController {
 	return "browseGroup";
     }
 
-    /**
-     * Nejjednodussi uprava skupiny - zadne kontroly
-     *
-     * @param group - zmenena skupina
-     * @param model
-     * @param request
-     * @param groupId - id zmenene skupiny
-     * @return predani rizeni do /views/browseGroup.ftl
-     */
     @RequestMapping(value = "/group/{groupId}", method = RequestMethod.POST)
     public String updateGroup(@ModelAttribute Group group, ModelMap model, HttpServletRequest request, @PathVariable Key groupId) {
 	UserService userService = UserServiceFactory.getUserService();
@@ -112,16 +109,7 @@ public class BrowseController extends BaseController {
 
 	return "browseGroup";
     }
-
-    /**
-     * Prikaz na vymazani skupiny predpokladam ze o konzistenci dat se stara
-     * databaze
-     *
-     * @param model
-     * @param request
-     * @param groupId id skupiny na vymazani
-     * @return predani rizeni do /views/browse.ftl
-     */
+    
     @RequestMapping(value = "/group/{groupId}", method = RequestMethod.DELETE)
     public String deleteGroup(ModelMap model, HttpServletRequest request, @PathVariable Key groupId) {
 	UserService userService = UserServiceFactory.getUserService();
@@ -137,45 +125,7 @@ public class BrowseController extends BaseController {
 	return "redirect:/browse/";
     }
 
-    /**
-     * "card" - hledana vizitka - muze byt null "relatedGroups" - skupiny ktere
-     * obsahuji vizitku (teoreticky k nim nemusi mit dany uzivatel pristup)
-     *
-     * @param model
-     * @param request
-     * @param cardId
-     * @return predani rizeni do /views/browseCard.ftl
-     */
-    @RequestMapping(value = "/card/{cardId}", method = RequestMethod.GET)
-    public String browseCard(ModelMap model, HttpServletRequest request, @PathVariable Key cardId) {
-	UserService userService = UserServiceFactory.getUserService();
-	User user = userService.getCurrentUser();
-
-	Card card = cards.findCardByKey(cardId);
-
-	if (card != null && (!card.isPrivate() || card.getOwner().equals(user))) {
-	    model.addAttribute("card", card); // get all card attributes (id, name, owner, addedAt, private, ...
-	    model.addAttribute("relatedGroups", cards.getGroupsOfCard(card));//
-	} else {
-	    model.addAttribute("card", null);
-	    model.addAttribute("relatedGroups", new ArrayList<Group>());
-	}
-	// model.addAttribute("relatedCards", …); // get Related cards, for example siblings in database
-	// model.addAttribute("relatedGroups", …); // get user's groups which contains this card
-
-	return "browseCard";
-    }
-
-    /**
-     * Nejjednodussi editace - zadna kontrola
-     * "card" - hledana vizitka - muze byt null "relatedGroups" - skupiny ktere
-     * obsahuji vizitku (teoreticky k nim nemusi mit dany uzivatel pristup)
-     *
-     * @param model
-     * @param request
-     * @param cardId
-     * @return predani rizeni do /views/browseCard.ftl
-     */
+    
     @RequestMapping(value = "/card/{cardId}", method = RequestMethod.POST)
     public String updateCard(@ModelAttribute Card card, ModelMap model, HttpServletRequest request, @PathVariable Key cardId) {
 	UserService userService = UserServiceFactory.getUserService();
@@ -194,14 +144,7 @@ public class BrowseController extends BaseController {
 	return "browseCard";
     }
 
-    /**
-     * Smazani karty
-     *
-     * @param model
-     * @param request
-     * @param cardId id karty na smazani
-     * @return redirect rizeni do /views/browse.ftl
-     */
+    
     @RequestMapping(value = "/card/{cardId}", method = RequestMethod.DELETE)
     public String deleteCard(ModelMap model, HttpServletRequest request, @PathVariable Key cardId) {
 	UserService userService = UserServiceFactory.getUserService();
@@ -215,4 +158,5 @@ public class BrowseController extends BaseController {
 
 	return "redirect:/browse/";
     }
+    */
 }

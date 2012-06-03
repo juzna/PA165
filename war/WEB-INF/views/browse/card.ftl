@@ -2,15 +2,14 @@
 <#include "/layout/navigation.ftl">
 <div class="container">
 	<div class="row-fluid" style="margin-bottom: -30px;">
-		<a class="btn btn" href="#">« Back</a>
+		<a class="btn btn" href="/browse/">« Back to Browse</a>
 	</div>
 
 	<section id="browse-card-billboard" class="row-fluid">
 		<div class="span12">
-			<div class="card-image"><img src="http://placekitten.com/940/620" /></div>
+			<div class="card-image"><img src="/cardImage/${card.img.getKeyString()}" /></div>
 			<div class="card-meta">
-				<p class="report"><a href="#">Report</a></p>
-				<p>By <a href="#">{$card['owner']}</a> at {$card['addedAt']|date:'%d.%m.%Y'}</p>
+				<p>By <a href="/browse/user/${card.owner}/">${card.owner}</a> at ${card.created?date}</p>
 			</div>
 		</div>
 	</section>
@@ -18,12 +17,16 @@
 	<div class="row-fluid margined">
 		<div class="span6">
 			<div class="card" style="margin-top: 0px;">
-				<h4 class="card-name">{$card['name']}</h4>
-				<dl class="card-tags">
-					{foreach $card['tags'] as $key => $val}
-					<dt>{$key}</dt><dd>{$val}</dd>
-					{/foreach}
-				</dl>
+				<h4 class="card-name">${card.name}</h4>
+				<#if card.tags??>
+					<dl class="card-tags">
+						<#list card.tags as tag>
+							<dt>${tag.tagKey}</dt><dd>${tag.content}</dd>
+						</#list>
+					</dl>
+				<#else>
+					<p class="well">No data</p>
+				</#if>
 				<form class="tagger margined">
 					<input class="tagger-key" type="text" placeholder="Key">
 					<label class="tagger-private"><input type="checkbox" class="checkbox"> Private</label>

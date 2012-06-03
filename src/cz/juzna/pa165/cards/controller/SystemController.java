@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserServiceFactory;
@@ -36,7 +37,7 @@ public class SystemController {
     	writer.printf("I've got %d cards to delete\n", cards.size());
     	
     	for (Card card : cards) {
-    		writer.printf("Deleting card %s\n", card.getGaeKey());
+    		writer.printf("Deleting card %s\n", card.getKey());
     		cardDao.removeCard(card);
     	}
     }
@@ -65,7 +66,7 @@ public class SystemController {
 
 
 		// Create card
-		Card card = new Card(strajk, "juzna.png", "Namecko", false);
+		Card card = new Card(strajk, new BlobKey("sample.jpg"), "Namecko", false);
 
 		// add tags
 		List<Tag> tags = card.getTags();
@@ -86,7 +87,7 @@ public class SystemController {
 
 
 		writer.println("Group keys: " + g1.getGaeKey() + ", " + g2.getGaeKey() + ", " + g3.getGaeKey());
-		writer.println("Card key: " + card.getGaeKey());
+		writer.println("Card key: " + card.getKey());
 	}
     
     

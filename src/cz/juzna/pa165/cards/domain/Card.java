@@ -1,5 +1,6 @@
 package cz.juzna.pa165.cards.domain;
 
+import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.users.User;
 import java.io.Serializable;
@@ -13,10 +14,10 @@ public class Card implements Serializable {
 	
 	@PrimaryKey
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-	private Key gaeKey;
+	private Key key;
 	
 	@Persistent
-	private String imgPath;
+	private BlobKey img;
 	
 	@Persistent
 	private User owner;
@@ -44,20 +45,20 @@ public class Card implements Serializable {
 		this.groupKeys = new HashSet<Key>();
 	}
 
-	public Card(User owner, String imgPath, String name, boolean privacy) {
+	public Card(User owner, BlobKey img, String name, boolean privacy) {
 		this();
-		this.imgPath = imgPath;
+		this.img = img;
 		this.owner = owner;
 		this.privacy = privacy;
 		this.name = name;
 	}
 
-	public Key getGaeKey() {
-		return gaeKey;
+	public Key getKey() {
+		return key;
 	}
 
-	public void setGaeKey(Key key) {
-		this.gaeKey = key;
+	public void setKey(Key key) {
+		this.key = key;
 	}
 
 	public List<Tag> getTags() {
@@ -68,12 +69,12 @@ public class Card implements Serializable {
 		this.tags = tags;
 	}
 
-	public String getImgPath() {
-		return imgPath;
+	public BlobKey getImg() {
+		return img;
 	}
 
-	public void setImgPath(String imgPath) {
-		this.imgPath = imgPath;
+	public void setImg(BlobKey img) {
+		this.img = img;
 	}
 
 	public User getOwner() {
@@ -117,7 +118,7 @@ public class Card implements Serializable {
 	    return false;
 	}
 	final Card other = (Card) obj;
-	if (this.gaeKey != other.gaeKey && (this.gaeKey == null || !this.gaeKey.equals(other.gaeKey))) {
+	if (this.key != other.key && (this.key == null || !this.key.equals(other.key))) {
 	    return false;
 	}
 	return true;
@@ -126,7 +127,7 @@ public class Card implements Serializable {
     @Override
     public int hashCode() {
 	int hash = 5;
-	hash = 71 * hash + (this.gaeKey != null ? this.gaeKey.hashCode() : 0);
+	hash = 71 * hash + (this.key != null ? this.key.hashCode() : 0);
 	return hash;
     }
 

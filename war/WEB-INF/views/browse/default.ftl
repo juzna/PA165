@@ -6,47 +6,59 @@
 		<div class="span4">
 			<section id="browse-groups">
 				<header><h2>My groups <a class="btn btn-mini">Manage groups</a></h2></header>
-				<ul class="nav nav-tabs nav-stacked">
-					{foreach $groups as $group}
-					<li class="group"><a href="#">{$group['name']}<span class="badge badge-info count">{$group['count']}</span></a></li>
-					{/foreach}
-				</ul>
-				<section id="browse-recent">
-					<header><h2>Recent cards</h2></header>
-					<ul>
-						{foreach $listedCards as $card}<li><a href="#">{$card['name']}</a></li>{/foreach}
-						{foreach $listedCards as $card}<li><a href="#">{$card['name']}</a></li>{/foreach}
-						{foreach $listedCards as $card}<li><a href="#">{$card['name']}</a></li>{/foreach}
-						{foreach $listedCards as $card}<li><a href="#">{$card['name']}</a></li>{/foreach}
+				<#if myGroups??>
+					<ul class="nav nav-tabs nav-stacked">
+						<#list myGroups as group>
+							<li class="group"><a href="#">${group.name}<span class="badge badge-info count">TODO</span></a></li>
+						</#list>
 					</ul>
-				</section>
+				<#else>
+					<p class="well">Auth area</p>
+				</#if>
+			</section>
+				
+			<section id="browse-recent">
+				<header><h2>Recent cards</h2></header>
+				<#if recentPublicCards??>
+					<ul>
+						<#list recentPublicCards as card>
+							<li><a href="/browse/card/${card.key}">${card.name}</a></li>
+						</#list>
+					</ul>
+				<#else>
+					<p class="well">No data</p>
+				</#if>
+			</section>
 		</div>
 
 
 		<div class="span8">
 			<section id="browse-browser">
 				<header><h2>Browsing all mine and public cards</h2></header>
-				{foreach $listedCards as $card}
-				<div class="card row-fluid" data-cardId="{$card['id']}">
-					<div class="span6">
-						<div class="card-image">
-							<img src="http://placekitten.com/300/200" />
+				<#if cards??>
+					<#list cards as card>
+						<div class="card row-fluid">
+							<div class="span6">
+								<div class="card-image">
+									<img src="/cardImage/${card.img.getKeyString()}" />
+								</div>
+								<div class="card-meta">
+									<p>By <a href="/browse/user/${card.owner}/">${card.owner}</a> at ${card.created?date}</p>
+								</div>
+							</div>
+							<div class="span6">
+								<h4 class="card-name"><a href="/browse/card/${card.key.id}/">${card.name!}</a></h4>
+								<dl class="card-tags">
+									<#list card.tags as tag>
+										<dt>${tag.tagKey}</dt><dd>${tag.content}</dd>
+									</#list>
+								</dl>
+							</div>
 						</div>
-						<div class="card-meta">
-							<p class="report"><a href="#">Report</a></p>
-							<p>By <a href="#">{$card['owner']}</a> at {$card['addedAt']|date:'%d.%m.%Y'}</p>
-						</div>
-					</div>
-					<div class="span6">
-						<h4 class="card-name">{$card['name']}</h4>
-						<dl class="card-tags">
-							{foreach $card['tags'] as $key => $val}
-							<dt>{$key}</dt><dd>{$val}</dd>
-							{/foreach}
-						</dl>
-					</div>
-				</div>
-				{/foreach}
+					</#list>
+				<#else>
+					<p class="well">No data</p>
+				</#if>
 				<div class="pagination">
 					<ul>
 						<li class="disabled"><a href="#">«</a></li>

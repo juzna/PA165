@@ -16,8 +16,6 @@ public interface CardDao {
 	public Card addCard(Card card);
 
 	public void removeCard(Card card);
-
-	public Card changeCardImgPath(Card card, String newImgPath);
 	
 	public Card changeCardPrivacy(Card card);
 
@@ -42,5 +40,7 @@ public interface CardDao {
 	public List<Card> getPublicCards();
 	
 	public Card refreshCard(Card card);
+
+	public Card findCardById(Long cardId);
 
 }

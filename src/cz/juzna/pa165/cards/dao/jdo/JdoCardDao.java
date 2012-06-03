@@ -1,6 +1,8 @@
 package cz.juzna.pa165.cards.dao.jdo;
 
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
+
 import javax.jdo.FetchGroup;
 import javax.jdo.JDODataStoreException;
 import javax.jdo.JDOObjectNotFoundException;
@@ -72,31 +74,6 @@ public class JdoCardDao implements CardDao {
 			// pm.close();
 		}
 	}
-
-	@Override
-	public Card changeCardImgPath(Card card, String newImgPath)
-			throws IllegalArgumentException, JDOObjectNotFoundException {
-		try {
-			card = this.refreshCard(card);
-		} catch (IllegalArgumentException e) {
-			// card is null
-			throw e;
-		} catch (JDOObjectNotFoundException e) {
-			// card not in DB
-			throw e;
-		}
-		
-		//pm = PMF.get().getPersistenceManager();
-		pm.getFetchPlan().setGroup(FetchGroup.ALL);
-		try {
-			card = pm.getObjectById(Card.class, card.getGaeKey());
-			card.setImgPath(newImgPath);
-		} finally {
-		//	pm.close();
-		}
-		
-		return card;
-	}
 	
 	@Override
 	public Card changeCardPrivacy(Card card)
@@ -114,7 +91,7 @@ public class JdoCardDao implements CardDao {
 //		pm = PMF.get().getPersistenceManager();
 		pm.getFetchPlan().setGroup(FetchGroup.ALL);
 		try {
-			card = pm.getObjectById(Card.class, card.getGaeKey());
+			card = pm.getObjectById(Card.class, card.getKey());
 			card.setPrivacy(!card.isPrivate());
 		} finally {
 //			pm.close();
@@ -142,16 +119,8 @@ public class JdoCardDao implements CardDao {
 		if (key == null) {
 			throw new IllegalArgumentException("Parameter key is null");
 		}
-//		pm = PMF.get().getPersistenceManager();
-		pm.getFetchPlan().setGroup(FetchGroup.ALL);
-		Card card = null;
-		try {
-			card = pm.getObjectById(Card.class, key);
-		} finally {
-//			pm.close();
-		}
-
-		return card;
+		
+		return pm.getObjectById(Card.class, key);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -213,7 +182,7 @@ public class JdoCardDao implements CardDao {
 		tag = new Tag(tag);
 		try {
 			tx.begin();
-			card = pm.getObjectById(Card.class, card.getGaeKey());
+			card = pm.getObjectById(Card.class, card.getKey());
 			card.getTags().add(tag);
 			tx.commit();
 		} finally {
@@ -250,7 +219,7 @@ public class JdoCardDao implements CardDao {
 		try {
 			tx.begin();
 			tag = pm.getObjectById(Tag.class, tag.getGaeKey());
-			card = pm.getObjectById(Card.class, card.getGaeKey());
+			card = pm.getObjectById(Card.class, card.getKey());
 			card.getTags().remove(tag);
 			pm.deletePersistent(tag);
 			tx.commit();
@@ -419,21 +388,26 @@ public class JdoCardDao implements CardDao {
 		if (card == null) {
 			throw new IllegalArgumentException("Argument card is null");
 		}
-		if (card.getGaeKey() == null) {
+		if (card.getKey() == null) {
 			card = this.addCard(card);
 		} else {
 			pm = PMF.get().getPersistenceManager();
 			pm.getFetchPlan().setGroup(FetchGroup.ALL);
 			try {
-				card = pm.getObjectById(Card.class, card.getGaeKey());
+				card = pm.getObjectById(Card.class, card.getKey());
 			} catch (JDOObjectNotFoundException e) {
-				throw new JDOObjectNotFoundException(card.getGaeKey()
+				throw new JDOObjectNotFoundException(card.getKey()
 						+ " is not in DB");
 			} finally {
 				pm.close();
 			}
 		}
 		return card;
+	}
+
+	@Override
+	public Card findCardById(Long cardId) {
+		return this.findCardByKey(KeyFactory.createKey("Card", cardId));
 	}
 
 }

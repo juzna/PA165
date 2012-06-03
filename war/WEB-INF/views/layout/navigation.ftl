@@ -12,10 +12,9 @@
 			<div class="nav-collapse collapse">
 				<ul class="nav">
 					<li class="active"><a href="/">Homepage</a></li>
-					<li class=""><a href="/browse">Browse</a></li>
-					<li class=""><a href="/browse/card">Browse card</a></li>
-					<li class=""><a href="/account/upload">Upload</a></li>
-					<li class=""><a href="/account/manage">Manage</a></li>
+					<li class=""><a href="/browse/">B Browse</a></li>
+					<li class=""><a href="/account/upload/">AUpload</a></li>
+					<li class=""><a href="/account/manage/">A Manage</a></li>
 				</ul>
 			</div>
 		</div>
