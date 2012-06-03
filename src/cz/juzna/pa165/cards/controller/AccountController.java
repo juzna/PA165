@@ -2,22 +2,17 @@ package cz.juzna.pa165.cards.controller;
 
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.files.AppEngineFile;
-import com.google.appengine.api.files.FileService;
-import com.google.appengine.api.files.FileServiceFactory;
-import com.google.appengine.api.files.FileWriteChannel;
 import com.google.appengine.api.users.User;
-import com.google.appengine.api.users.UserService;
-import com.google.appengine.api.users.UserServiceFactory;
 import cz.juzna.pa165.cards.dao.CardDao;
 import cz.juzna.pa165.cards.dao.GroupDao;
 import cz.juzna.pa165.cards.domain.Card;
 import cz.juzna.pa165.cards.domain.Group;
 import java.io.IOException;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+
+import cz.juzna.pa165.cards.util.BlobHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -153,13 +148,7 @@ public class AccountController extends BaseController {
 		model.addAttribute("file", file.getSize());
 		
 		// Save image to blob
-		FileService fileService = FileServiceFactory.getFileService();
-		AppEngineFile newBlobFile = fileService.createNewBlobFile("image/jpeg");
-		boolean lock = true;
-		FileWriteChannel writeChannel = fileService.openWriteChannel(newBlobFile, lock);
-		writeChannel.write(ByteBuffer.wrap(file.getBytes()));
-		writeChannel.closeFinally();
-		BlobKey blobKey = fileService.getBlobKey(newBlobFile);	
+	    BlobKey blobKey = BlobHelper.addImage(file.getBytes());
 		
 		Card card = new Card(user, blobKey, request.getParameter("form-upload-name"), false); // TODO
 		cards.addCard(card);
