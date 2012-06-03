@@ -1,8 +1,8 @@
-<!-- Indices written at Sun, 3 Jun 2012 23:51:07 CEST -->
+<!-- Indices written at Mon, 4 Jun 2012 00:20:49 CEST -->
 
 <datastore-indexes>
 
-    <!-- Used 36 times in query history -->
+    <!-- Used 5 times in query history -->
     <datastore-index kind="Tag" ancestor="true" source="auto">
         <property name="tags_INTEGER_IDX" direction="asc"/>
     </datastore-index>

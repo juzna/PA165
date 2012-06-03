@@ -20,10 +20,11 @@ public class JdoCardDao implements CardDao {
 		if (card == null) {
 			throw new IllegalArgumentException("Argument card is null");
 		}
+		PersistenceManager pm = PMF.get().getPersistenceManager();
 		try {
 			card = pm.makePersistent(card);
 		} finally {
-			// pm.close();
+			pm.close();
 		}
 		return card;
 	}
@@ -76,8 +77,10 @@ public class JdoCardDao implements CardDao {
 	
 	@Override
 	public void changeCardName(Card card, String name) {
-		card.setName(name);
+		
 		PersistenceManager pm = PMF.get().getPersistenceManager();
+		card = pm.getObjectById(Card.class, card.getKey());
+		card.setName(name);
 		try {
 			pm.makePersistent(card);
 		} finally {
@@ -87,8 +90,10 @@ public class JdoCardDao implements CardDao {
 	
 	@Override
 	public void changeCardPrivacy(Card card, boolean privacy) {
-		card.setPrivacy(privacy);
+		
 		PersistenceManager pm = PMF.get().getPersistenceManager();
+		card = pm.getObjectById(Card.class, card.getKey());
+		card.setPrivacy(privacy);
 		try {
 			pm.makePersistent(card);
 		} finally {
@@ -120,7 +125,7 @@ public class JdoCardDao implements CardDao {
 		try {
 			return pm.getObjectById(Card.class, key);
 		} finally {
-			pm.close();
+			// pm.close(); // else tags will NOT be laoded
 		}
 	}
 	
