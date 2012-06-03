@@ -87,6 +87,10 @@ public class Card implements Serializable {
 	public boolean isPrivate() {
 		return privacy;
 	}
+	
+	public boolean getPrivacy() {
+		return privacy;
+	}
 
 	public void setPrivacy(boolean privacy) {
 		this.privacy = privacy;

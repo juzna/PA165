@@ -73,6 +73,16 @@ public class JdoGroupDao implements GroupDao {
 			pm.close();
 		}
 	}
+	
+	@Override
+	public void changeGroup(Group group) throws IllegalArgumentException, JDOObjectNotFoundException {
+		pm = PMF.get().getPersistenceManager();
+		try {
+			pm.makePersistent(group);
+		} finally {
+			pm.close();
+		}
+	}
 
 	@Override
 	public Group changeGroupName(Group group, String newName) throws IllegalArgumentException, JDOObjectNotFoundException {

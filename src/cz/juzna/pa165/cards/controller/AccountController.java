@@ -72,7 +72,7 @@ public class AccountController extends BaseController {
 	public String accountCardEdit(@PathVariable Long cardId, Model model, HttpServletRequest request) {
 		
 		Card card = cards.findCardById(cardId);
-		if (card.isPrivate() && !card.getOwner().equals(getUser())) {
+		if (!card.getOwner().equals(getUser())) {
 			return "account/forbidden";
 		}
 		
@@ -80,34 +80,50 @@ public class AccountController extends BaseController {
 		if(request.getParameter("form-editor-privacy") != null) {
 			card.setPrivacy( (request.getParameter("form-editor-privacy").equalsIgnoreCase("private")) ? true : false );
 		}
-		System.out.print("Byl sem tady");
+		
 		cards.changeCard(card);
 		
 		return "redirect:/account/card/" + cardId +"/";
 	}
 	
-	
-
-    /**
-     * Pripravuje vsechny skupiny daneho uzivatele "groups" - skupiny uzivatele,
-     * prazdna pro neprihlaseneho
-     *
-     * @param model
-     * @param request
-     * @return predani rizeni do /views/accountGroups.ftl
-     */
-    @RequestMapping(value = "/groups", method = RequestMethod.GET)
-    public String accountGroups(ModelMap model, HttpServletRequest request) {
-	List<Group> userGroups = new ArrayList<Group>();
-
-	if (user != null) {
-	    userGroups = groups.findGroupsByOwner(user);
+	@RequestMapping(value = "/card/{cardId}", method = RequestMethod.POST, params="do=delete")
+	public String accountCardDelete(@PathVariable Long cardId, Model model, HttpServletRequest request) {
+		
+		Card card = cards.findCardById(cardId);
+		if (!card.getOwner().equals(getUser())) {
+			return "account/forbidden";
+		}
+		
+		cards.removeCard(card);
+		
+		return "redirect:/account/cards/";
 	}
-
-	model.addAttribute("groups", userGroups); // all users groups
-
-	return "accountGroups";
-    }
+	
+	
+	@RequestMapping(value = "/groups", method = RequestMethod.GET)
+	public String accountGroups(ModelMap model, HttpServletRequest request) {
+		model.addAttribute("groups", groups.findGroupsByOwner(getUser())); // all users groups
+		return "account/groups";
+	}
+	
+	@RequestMapping(value = "/groups", method = RequestMethod.POST, params="do=edit")
+	public String accountGroupsEdit(ModelMap model, HttpServletRequest request) {
+		
+		Group group = groups.findGroupById(Long.valueOf(request.getParameter("form-groups-id")));
+		group.setName(request.getParameter("form-groups-name"));
+		groups.changeGroup(group);
+		
+		return "redirect:/account/groups";
+	}
+	
+	@RequestMapping(value = "/groups", method = RequestMethod.POST, params="do=delete")
+	public String accountGroupsDelete(ModelMap model, HttpServletRequest request) {
+		
+		Group group = groups.findGroupById(Long.valueOf(request.getParameter("form-groups-id")));
+		groups.removeGroup(group);
+		
+		return "redirect:/account/groups";
+	}
 
 
 	@RequestMapping(value = "/upload", method = RequestMethod.GET)
@@ -116,9 +132,8 @@ public class AccountController extends BaseController {
 	}
 
 
-
-    @RequestMapping(value = "/upload", method = RequestMethod.POST)
-    public String accountUploadProcess(@RequestParam("form-upload-image") MultipartFile file, MultipartHttpServletRequest request, Model model) throws IOException {
+	@RequestMapping(value = "/upload", method = RequestMethod.POST)
+	public String accountUploadProcess(@RequestParam("form-upload-image") MultipartFile file, MultipartHttpServletRequest request, Model model) throws IOException {
 		model.addAttribute("name", request.getParameter("form-upload-name"));
 		model.addAttribute("privacy", request.getParameter("form-upload-privacy"));
 		model.addAttribute("file", file.getSize());
@@ -130,5 +145,5 @@ public class AccountController extends BaseController {
 		cards.addCard(card);
 		
 		return "redirect:/browse/card/" + card.getKey().getId() + "/";
-    }
+	}
 }

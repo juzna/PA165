@@ -8,11 +8,15 @@ import cz.juzna.pa165.cards.domain.Group;
 
 import java.util.List;
 
+import javax.jdo.JDOObjectNotFoundException;
+
 public interface GroupDao {
 
 	public Group addGroup(Group group);
 
 	public void removeGroup(Group group);
+	
+	void changeGroup(Group group);
 
 	public Group changeGroupName(Group group, String newName);
 
@@ -32,5 +36,4 @@ public interface GroupDao {
 		
 	public Group refreshGroup(Group group);
 
-	
 }

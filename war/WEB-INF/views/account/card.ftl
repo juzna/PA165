@@ -25,7 +25,7 @@
 										<div class="span6">
 											<label class="radio">
 												<dl>
-													<dt><input type="radio" checked="" value="public" name="form-editor-privacy">Public</dt>
+													<dt><input type="radio" value="public" name="form-editor-privacy" <#if card.privacy?? && !card.privacy>checked=""</#if> >Public</dt>
 													<dd>Anyone can search for, view and add tags.</dd>
 												</dl>
 											</label>
@@ -33,7 +33,7 @@
 										<div class="span6">
 											<label class="radio">
 												<dl>
-													<dt><input type="radio" checked="" value="private" name="form-editor-privacy">Private</dt>
+													<dt><input type="radio" value="private" name="form-editor-privacy" <#if card.privacy?? && card.privacy>checked="checked"</#if> >Private</dt>
 													<dd>Only you can see, edit and add fields to this card.</dd>
 												</dl>
 											</label>
