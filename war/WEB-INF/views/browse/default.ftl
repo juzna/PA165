@@ -10,7 +10,7 @@
 					<#if groups??>
 						<ul class="nav nav-tabs nav-stacked">
 							<#list groups as group>
-								<li class="group <#if group == activeGroup>active</#if>" data-id="${group.key.id}">
+								<li class="group <#if group == activeGroup!"null">active</#if>" data-id="${group.key.id}">
 									<a href="/browse/?group=${group.key.id}">${group.name}</a>
 								</li>
 							</#list>

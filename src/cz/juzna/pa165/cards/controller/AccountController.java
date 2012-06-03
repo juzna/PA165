@@ -7,13 +7,9 @@ import cz.juzna.pa165.cards.dao.CardDao;
 import cz.juzna.pa165.cards.dao.GroupDao;
 import cz.juzna.pa165.cards.domain.Card;
 import cz.juzna.pa165.cards.domain.Group;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import javax.servlet.http.HttpServletRequest;
-
 import cz.juzna.pa165.cards.util.BlobHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -24,8 +20,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 @Controller
 @RequestMapping("account/*")
+@Scope("request") /* per request, i.e. user can be injected properly ;) */
 public class AccountController extends BaseController {
 
     @Autowired
@@ -36,7 +38,14 @@ public class AccountController extends BaseController {
 	@Autowired
 	private User user;
 
-    /**
+
+	public AccountController() {
+		// Debug
+		System.out.println("Creating account controller");
+	}
+
+
+	/**
      * Pripravuje informace na stranku o uzivateli "user" - uzivatel
      *
      * @param model
@@ -59,15 +68,15 @@ public class AccountController extends BaseController {
      */
     @RequestMapping(value = "/manage", method = RequestMethod.GET)
     public String accountManage(ModelMap model, HttpServletRequest request) {
-	if (user != null) {
-	    model.addAttribute("userCards", cards.findCardsByOwner(user)); // all user's cards
-	} else {
-	    model.addAttribute("userCards", new ArrayList<Card>());
-	}
-
-	model.addAttribute("publicCards", cards.getCards(0, 999, getUser()));
-
-	return "accountManage";
+		if (user != null) {
+		    model.addAttribute("userCards", cards.findCardsByOwner(user)); // all user's cards
+		} else {
+		    model.addAttribute("userCards", new ArrayList<Card>());
+		}
+	
+		model.addAttribute("publicCards", cards.getCards(0, 999, getUser()));
+	
+		return "accountManage";
     }
 
     /**
@@ -121,9 +130,13 @@ public class AccountController extends BaseController {
 	}
 
 
-	@RequestMapping(value = "/upload", method = RequestMethod.POST)
-	public String accountUploadProcess(@RequestParam("form-upload-image") MultipartFile file, Model model, MultipartHttpServletRequest request) throws IOException {
 
+    @RequestMapping(value = "/upload", method = RequestMethod.POST)
+    public String accountUploadProcess(@RequestParam("form-upload-image") MultipartFile file, MultipartHttpServletRequest request, Model model) throws IOException {
+		model.addAttribute("name", request.getParameter("form-upload-name"));
+		model.addAttribute("privacy", request.getParameter("form-upload-privacy"));
+		model.addAttribute("file", file.getSize());
+		
 		// Save image to blob
 		BlobKey blobKey = BlobHelper.addImage(file.getBytes());
 		
