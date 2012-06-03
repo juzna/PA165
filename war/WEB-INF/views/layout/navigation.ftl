@@ -12,9 +12,8 @@
 			<div class="nav-collapse collapse">
 				<ul class="nav">
 					<li class="active"><a href="/">Homepage</a></li>
-					<li class=""><a href="/browse/">B Browse</a></li>
-					<li class=""><a href="/account/upload/">AUpload</a></li>
-					<li class=""><a href="/account/manage/">A Manage</a></li>
+					<li class=""><a href="/browse/">Browse</a></li>
+					<li class=""><a href="/account/">Account</a></li>
 				</ul>
 			</div>
 		</div>

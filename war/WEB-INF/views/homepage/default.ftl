@@ -24,7 +24,7 @@
 								</div>
 							</div>
 							<div class="span6">
-								<h4 class="card-name"><a href="/browse/card/${card.key.getId()}">${card.name!}</a></h4>
+								<h4 class="card-name"><a href="/browse/card/${card.key.id?c}">${card.name!}</a></h4>
 								<dl class="card-tags">
 									<#list card.tags as tag>
 										<dt>${tag.tagKey}</dt><dd>${tag.content}</dd>
