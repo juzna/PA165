@@ -60,7 +60,9 @@ public class MailHandlerController extends javax.servlet.http.HttpServlet {
 					imageBlobKey = BlobHelper.addImage(bytes);
 				}
 				else if(body.getContentType() != null && body.getContentType().startsWith("text/plain")) {
-					textContent = (String) bodyContent_;
+					if (textContent != null) {
+						textContent = (String) bodyContent_;
+					}
 				}
 
 				logger.log(Level.INFO, "Body " + body.getContentType() + ", file " + body.getFileName());
