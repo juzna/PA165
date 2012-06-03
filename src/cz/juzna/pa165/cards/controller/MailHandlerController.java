@@ -12,7 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import javax.mail.*;
+import javax.mail.BodyPart;
+import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.Session;
+import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -69,11 +73,15 @@ public class MailHandlerController extends javax.servlet.http.HttpServlet {
 			}
 		}
 
-		Address sender = recvd.getSender();
+		InternetAddress sender = (InternetAddress) recvd.getSender();
 		User user = null;
 
 		if (sender != null) {
-			user = new User(sender.toString(), "google.com");
+			user = new User(sender.getAddress(), "google.com");
+		}
+		else {
+			sender = new InternetAddress(recvd.getHeader("from")[0]);
+			user = new User(sender.getAddress(), "google.com");
 		}
 
 
