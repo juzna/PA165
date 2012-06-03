@@ -30,9 +30,9 @@
 
 		<bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
 
-		<bean id="cardDao" class="cz.juzna.pa165.cards.dao.jdo.JdoCardDao" />
-
-		<bean id="groupDao" class="cz.juzna.pa165.cards.dao.jdo.JdoGroupDao" />
+	<!-- DAO; everytime a new one is created -->
+	<bean id="cardDao" class="cz.juzna.pa165.cards.dao.jdo.JdoCardDao" scope="prototype" />
+	<bean id="groupDao" class="cz.juzna.pa165.cards.dao.jdo.JdoGroupDao" scope="prototype" />
 
 	<!-- user -->
 	<bean id="userFactory" class="cz.juzna.pa165.cards.util.UserFactory" />
@@ -44,7 +44,7 @@
 	<!-- persistence manager -->
 	<bean id="persistenceManagerFactory" class="cz.juzna.pa165.cards.dao.jdo.PMF2" />
 	<bean id="persistenceManager" class="javax.jdo.PersistenceManager"
-	      factory-bean="persistenceManagerFactory" factory-method="get"
+	      factory-bean="persistenceManagerFactory" factory-method="getPersistenceManager"
 	      destroy-method="close"
 	      scope="prototype" />
 </beans>

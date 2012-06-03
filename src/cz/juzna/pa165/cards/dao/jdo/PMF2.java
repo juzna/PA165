@@ -7,7 +7,7 @@ import javax.jdo.PersistenceManager;
  * There may be a nicer way to do it ;)
  */
 public final class PMF2 {
-	public PersistenceManager get() {
+	public PersistenceManager getPersistenceManager() {
 		return PMF.get().getPersistenceManager();
 	}
 }

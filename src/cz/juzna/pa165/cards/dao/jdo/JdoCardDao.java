@@ -336,8 +336,7 @@ public class JdoCardDao implements CardDao {
 	}
 
 	@SuppressWarnings("unchecked")
-	@Override
-	public List<Card> getCards(Integer offset, Integer limit) {
+	public List<Card> _getCards(Integer offset, Integer limit, User owner) {
 		// TODO: process offset, limit
 		pm = PMF.get().getPersistenceManager();
 		ArrayList<Card> cardList = new ArrayList<Card>();
@@ -345,22 +344,38 @@ public class JdoCardDao implements CardDao {
 		Query query = null;
 		try {
 			query = pm.newQuery(Card.class);
-			query.setFilter("privacy == false");
-			result = (List<Card>) query.execute();
-			// the "result" List can't be accessed after pm.close();
-			for (Card c : result) {
-				cardList.add(c);
+
+			if (owner == null) {
+				query.setFilter("privacy == false");
+				query.setRange(offset, offset + limit);
+				result = (List<Card>) query.execute();
+
+			} else {
+				// Load mine TODO: should load mine + public, but appengine can't do that
+				query.setFilter("owner == ownerParam");
+				query.declareImports("import com.google.appengine.api.users.User");
+				query.declareParameters("User ownerParam");
+				query.setRange(offset, offset + limit);
+				result = (List<Card>) query.execute(owner);
 			}
+
+
 		} finally {
 			query.closeAll();
-			//pm.close();
+			pm.close();
 		}
 		return result;
 	}
 
+	@Override
+	public List<Card> getCards(Integer offset, Integer limit) {
+		return _getCards(offset,limit, null);
+	}
+
+	@Override
 	public List<Card> getCards(Integer offset, Integer limit, User owner) {
-		// TODO
-		return new ArrayList<Card>();
+		if (owner == null) throw new IllegalArgumentException("owner");
+		return _getCards(offset,limit, owner);
 	}
 
 	@Override
