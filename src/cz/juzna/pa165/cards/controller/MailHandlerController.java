@@ -2,23 +2,21 @@ package cz.juzna.pa165.cards.controller;
 
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.users.User;
+import com.google.appengine.repackaged.com.google.common.io.ByteStreams;
 import cz.juzna.pa165.cards.dao.CardDao;
 import cz.juzna.pa165.cards.domain.Card;
 import cz.juzna.pa165.cards.domain.Tag;
 import cz.juzna.pa165.cards.util.BlobHelper;
+import org.apache.geronimo.mail.util.Base64DecoderStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.mail.*;
-import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Date;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -58,9 +56,8 @@ public class MailHandlerController extends javax.servlet.http.HttpServlet {
 
 
 				if (body.getContentType() != null && body.getContentType().startsWith("image/jpeg")) {
-					// TODO
-//					body.getDataHandler().
-//					imageBlobKey = BlobHelper.addImage(body.getContent());
+					byte bytes[] = ByteStreams.toByteArray((Base64DecoderStream) bodyContent_);
+					imageBlobKey = BlobHelper.addImage(bytes);
 				}
 				else if(body.getContentType() != null && body.getContentType().startsWith("text/plain")) {
 					textContent = (String) bodyContent_;
