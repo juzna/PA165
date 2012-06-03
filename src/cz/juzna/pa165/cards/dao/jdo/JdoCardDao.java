@@ -402,7 +402,7 @@ public class JdoCardDao implements CardDao {
 
 		} finally {
 			query.closeAll();
-			pm.close();
+			// pm.close();
 		}
 
 		return result;

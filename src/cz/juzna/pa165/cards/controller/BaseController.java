@@ -20,4 +20,9 @@ public abstract class BaseController {
 	public String getLoginUrl(HttpServletRequest request) {
 		return UserServiceFactory.getUserService().createLoginURL(request.getRequestURI());
 	}
+	/** Always assign logoutUrl attribute to model */
+	@ModelAttribute("logoutUrl")
+	public String getLogoutUrl(HttpServletRequest request) {
+		return UserServiceFactory.getUserService().createLogoutURL(request.getRequestURI());
+	}
 }

@@ -3,7 +3,7 @@
 		<div class="container">
 			<span class="userarea" style="float: right;">
 				<#if user??>
-					<p>You are logged in as ${user.getEmail()}</p>
+					<p>You are logged in as ${user.getEmail()} <a class="btn btn-mini" href="${logoutUrl}">Logout</a></p>
 				<#else>
 					<a href="${loginUrl}">Login with Google</button>
 				</#if>

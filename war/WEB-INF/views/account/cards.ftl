@@ -9,13 +9,13 @@
 				<#if cards??>
 					<div class="row-fluid">
 						<#list cards as card>
-							<div class="card card_thumb span4" data-id="${card.key.id}">
+							<div class="card card_thumb span4" data-id="${card.key.id?c}">
 								<div class="card-image"><img src="/cardImage/${card.img.getKeyString()}" /></div>
 								<div class="card-meta">
-									<p class="report"><a href="/account/card/${card.key.id}/">Edit</a></p>
+									<p class="report"><a href="/account/card/${card.key.id?c}/">Edit</a></p>
 									<p>${card.created?date}</p>
 								</div>
-								<h4 class="card-name"><a href="/browse/card/${card.key.id}/">${card.name}</a></h4>
+								<h4 class="card-name"><a href="/browse/card/${card.key.id?c}/">${card.name}</a></h4>
 							</div>
 						</#list>
 					</ul>

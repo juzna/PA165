@@ -10,8 +10,8 @@
 					<#if groups??>
 						<ul class="nav nav-tabs nav-stacked">
 							<#list groups as group>
-								<li class="group <#if group == activeGroup!"null">active</#if>" data-id="${group.key.id}">
-									<a href="/browse/?group=${group.key.id}">${group.name}</a>
+								<li class="group <#if group == activeGroup!"null">active</#if>" data-id="${group.key.id?c}">
+									<a href="/browse/?group=${group.key.id?c}">${group.name}</a>
 								</li>
 							</#list>
 						</ul>
@@ -28,7 +28,7 @@
 				<#if recentPublicCards??>
 					<ul>
 						<#list recentPublicCards as card>
-							<li><a href="/browse/card/${card.key.id}/">${card.name}</a></li>
+							<li><a href="/browse/card/${card.key.id?c}/">${card.name}</a></li>
 						</#list>
 					</ul>
 				<#else>
@@ -53,7 +53,7 @@
 								</div>
 							</div>
 							<div class="span6">
-								<h4 class="card-name"><a href="/browse/card/${card.key.id}/">${card.name!}</a></h4>
+								<h4 class="card-name"><a href="/browse/card/${card.key.id?c}/">${card.name!}</a></h4>
 								<dl class="card-tags">
 									<#list card.tags as tag>
 										<dt>${tag.tagKey}</dt><dd>${tag.content}</dd>

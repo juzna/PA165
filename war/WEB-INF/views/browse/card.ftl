@@ -40,7 +40,7 @@
 		<div class="span6">
 			<#if card.owner == user>
 				<section id="browse-card-ownership" class="marginer">
-					<p class="alert alert-info">This card belongs to you. <a href="/account/card/${card.key.id}/"><strong>Manage this card</strong></a></p>
+					<p class="alert alert-info">This card belongs to you. <a href="/account/card/${card.key.id?c}/"><strong>Manage this card</strong></a></p>
 				</section>
 			</#if>
 		
@@ -53,10 +53,10 @@
 							<li class="group">
 								<form method="POST" class="form-delete">
 									<input type="hidden" name="do" value="removeFromGroup" />
-									<input type="hidden" name="groupId" value="${group.key.id}" />
+									<input type="hidden" name="groupId" value="${group.key.id?c}" />
 									<button type="submit" class="btn btn-mini">Remove</button>
 								</form>
-								<a href="/browse/?group=${group.key.id}">${group.name}</a>
+								<a href="/browse/?group=${group.key.id?c}">${group.name}</a>
 							</li>
 						</#list>
 					</ul>
@@ -77,7 +77,7 @@
 							<#if allUsersGroups??>
 								<option value="">Select group...</option>
 								<#list allUsersGroups as group>
-									<option value="${group.key.id}">${group.name}</option>
+									<option value="${group.key.id?c}">${group.name}</option>
 								</#list>
 							<#else>
 								<option value="">You have no groups</options>
