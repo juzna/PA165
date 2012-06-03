@@ -30,13 +30,12 @@ public class BrowseController extends BaseController {
     @Autowired
     private GroupDao groups;
 
-    
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String browse(Model model, HttpServletRequest request) {
+	@Autowired
+	private User user;
 
-		UserService userService = UserServiceFactory.getUserService();
-		User user = userService.getCurrentUser();
-		
+
+	@RequestMapping(value = "/", method = RequestMethod.GET)
+    public String browse(Model model, HttpServletRequest request) {
 		List<Card> publicCards = cards.getPublicCards();
 		model.addAttribute("cards", publicCards);
 	
@@ -54,10 +53,6 @@ public class BrowseController extends BaseController {
     
     @RequestMapping(value = "/card/{cardId}", method = RequestMethod.GET)
     public String browseCard(@PathVariable Long cardId, Model model) {
-    	
-    	UserService userService = UserServiceFactory.getUserService();
-		User user = userService.getCurrentUser();
-	
 		Card card = cards.findCardById(cardId);
 	
 		if (card != null && (!card.isPrivate() || card.getOwner().equals(user))) {
@@ -75,9 +70,6 @@ public class BrowseController extends BaseController {
     /*
     @RequestMapping(value = "/group/{groupId}", method = RequestMethod.GET)
     public String browseGroup(ModelMap model, HttpServletRequest request, @PathVariable Key groupId) {
-	UserService userService = UserServiceFactory.getUserService();
-	User user = userService.getCurrentUser();
-
 	Group group = groups.findGroupByKey(groupId);
 	List<Card> groupCards = new ArrayList<Card>();
 	if (group != null && group.getOwner().equals(user)) {
@@ -93,9 +85,6 @@ public class BrowseController extends BaseController {
 
     @RequestMapping(value = "/group/{groupId}", method = RequestMethod.POST)
     public String updateGroup(@ModelAttribute Group group, ModelMap model, HttpServletRequest request, @PathVariable Key groupId) {
-	UserService userService = UserServiceFactory.getUserService();
-	User user = userService.getCurrentUser();
-
 	Group groupOld = groups.findGroupByKey(groupId);
 	List<Card> groupCards = new ArrayList<Card>();
 	if (groupOld != null && groupOld.getOwner().equals(user)) {
@@ -112,10 +101,6 @@ public class BrowseController extends BaseController {
     
     @RequestMapping(value = "/group/{groupId}", method = RequestMethod.DELETE)
     public String deleteGroup(ModelMap model, HttpServletRequest request, @PathVariable Key groupId) {
-	UserService userService = UserServiceFactory.getUserService();
-	User user = userService.getCurrentUser();
-
-	
 	Group group = groups.findGroupByKey(groupId);
 
 	if (group != null && group.getOwner().equals(user)) {
@@ -128,9 +113,6 @@ public class BrowseController extends BaseController {
     
     @RequestMapping(value = "/card/{cardId}", method = RequestMethod.POST)
     public String updateCard(@ModelAttribute Card card, ModelMap model, HttpServletRequest request, @PathVariable Key cardId) {
-	UserService userService = UserServiceFactory.getUserService();
-	User user = userService.getCurrentUser();
-
 	Card cardOld = cards.findCardByKey(cardId);
 
 	if (cardOld != null && (!cardOld.isPrivate() || cardOld.getOwner().equals(user))) {
@@ -147,9 +129,6 @@ public class BrowseController extends BaseController {
     
     @RequestMapping(value = "/card/{cardId}", method = RequestMethod.DELETE)
     public String deleteCard(ModelMap model, HttpServletRequest request, @PathVariable Key cardId) {
-	UserService userService = UserServiceFactory.getUserService();
-	User user = userService.getCurrentUser();
-
 	Card card = cards.findCardByKey(cardId);
 
 	if (card != null && card.getOwner().equals(user)) {

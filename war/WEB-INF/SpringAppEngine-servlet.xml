@@ -34,4 +34,8 @@
 		<bean id="cardDao" class="cz.juzna.pa165.cards.dao.jdo.JdoCardDao" />
 
 		<bean id="groupDao" class="cz.juzna.pa165.cards.dao.jdo.JdoGroupDao" />
+
+	<bean id="userFactory" class="cz.juzna.pa165.cards.util.UserFactory" />
+	<bean id="user" class="com.google.appengine.api.users.User" factory-bean="userFactory" factory-method="getUser" />
+
 </beans>

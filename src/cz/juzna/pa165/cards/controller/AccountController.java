@@ -38,6 +38,9 @@ public class AccountController extends BaseController {
     @Autowired
     private GroupDao groups;
 
+	@Autowired
+	private User user;
+
     /**
      * Pripravuje informace na stranku o uzivateli "user" - uzivatel
      *
@@ -61,9 +64,6 @@ public class AccountController extends BaseController {
      */
     @RequestMapping(value = "/manage", method = RequestMethod.GET)
     public String accountManage(ModelMap model, HttpServletRequest request) {
-	UserService userService = UserServiceFactory.getUserService();
-	User user = userService.getCurrentUser();
-
 	if (user != null) {
 	    model.addAttribute("userCards", cards.findCardsByOwner(user)); // all user's cards
 	} else {
@@ -86,9 +86,6 @@ public class AccountController extends BaseController {
      */
     @RequestMapping(value = "/card/{cardId}", method = RequestMethod.GET)
     public String accountCard(ModelMap model, HttpServletRequest request, @PathVariable Key cardId) {
-	UserService userService = UserServiceFactory.getUserService();
-	User user = userService.getCurrentUser();
-
 	Card card = cards.findCardByKey(cardId);
 	if (card != null) {
 	    if (card.isPrivate() && !card.getOwner().equals(user)) {
@@ -111,9 +108,6 @@ public class AccountController extends BaseController {
      */
     @RequestMapping(value = "/groups", method = RequestMethod.GET)
     public String accountGroups(ModelMap model, HttpServletRequest request) {
-	UserService userService = UserServiceFactory.getUserService();
-	User user = userService.getCurrentUser();
-
 	List<Group> userGroups = new ArrayList<Group>();
 
 	if (user != null) {
@@ -135,9 +129,6 @@ public class AccountController extends BaseController {
      */
     @RequestMapping(value = "/upload", method = RequestMethod.GET)
     public String accountUpload(ModelMap model, HttpServletRequest request) {
-		UserService userService = UserServiceFactory.getUserService();
-		User user = userService.getCurrentUser();
-	
 		Card card = new Card();
 		model.addAttribute("card", card); // cista karta pro prazdny formular(get all card attributes (id, name, owner, addedAt, private, ...)
 		// model.addAttribute("relatedCards", ‚Ä¶); // get Related cards, for example siblings in database
@@ -157,10 +148,6 @@ public class AccountController extends BaseController {
      */
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     public String accountUploadProcess(@RequestParam("form-upload-image") MultipartFile file, MultipartHttpServletRequest request, Model model) throws IOException {
-    	
-		UserService userService = UserServiceFactory.getUserService();
-		User user = userService.getCurrentUser();
-		
 		model.addAttribute("name", request.getParameter("form-upload-name"));
 		model.addAttribute("privacy", request.getParameter("form-upload-privacy"));
 		model.addAttribute("file", file.getSize());
