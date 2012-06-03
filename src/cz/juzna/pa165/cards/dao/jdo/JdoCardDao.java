@@ -362,6 +362,7 @@ public class JdoCardDao implements CardDao {
 
 			if (owner == null) {
 				query.setFilter("privacy == false");
+				query.setRange(offset, offset + limit);
 				result = (List<Card>) query.execute();
 
 			} else {
@@ -369,6 +370,7 @@ public class JdoCardDao implements CardDao {
 				query.setFilter("owner == ownerParam");
 				query.declareImports("import com.google.appengine.api.users.User");
 				query.declareParameters("User ownerParam");
+				query.setRange(offset, offset + limit);
 				result = (List<Card>) query.execute(owner);
 			}
 
