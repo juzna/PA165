@@ -2,26 +2,14 @@ package cz.juzna.pa165.cards.dao.jdo;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
-
-import javax.jdo.FetchGroup;
-import javax.jdo.JDODataStoreException;
-import javax.jdo.JDOObjectNotFoundException;
-import javax.jdo.Transaction;
-import javax.jdo.Query;
 import com.google.appengine.api.users.User;
-
 import cz.juzna.pa165.cards.dao.CardDao;
-import cz.juzna.pa165.cards.domain.*;
+import cz.juzna.pa165.cards.domain.Card;
+import cz.juzna.pa165.cards.domain.Group;
+import cz.juzna.pa165.cards.domain.Tag;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.jdo.PersistenceManager;
+import javax.jdo.*;
+import java.util.*;
 
 public class JdoCardDao implements CardDao {
 	/* final */ PersistenceManager pm = PMF.get().getPersistenceManager(); // should be final I think but there's lots of Jenyk's code which changes it
@@ -364,7 +352,8 @@ public class JdoCardDao implements CardDao {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public List<Card> getPublicCards() {
+	public List<Card> getCards(Integer offset, Integer limit) {
+		// TODO: process offset, limit
 		pm = PMF.get().getPersistenceManager();
 		ArrayList<Card> cardList = new ArrayList<Card>();
 		List<Card> result = null;
@@ -382,6 +371,11 @@ public class JdoCardDao implements CardDao {
 			//pm.close();
 		}
 		return result;
+	}
+
+	public List<Card> getCards(Integer offset, Integer limit, User owner) {
+		// TODO
+		return new ArrayList<Card>();
 	}
 
 	@Override

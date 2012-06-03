@@ -1,53 +1,49 @@
 package cz.juzna.pa165.cards.controller;
 
-import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.datastore.KeyFactory;
-import com.google.appengine.api.users.User;
-import com.google.appengine.api.users.UserService;
-import com.google.appengine.api.users.UserServiceFactory;
 import cz.juzna.pa165.cards.dao.CardDao;
 import cz.juzna.pa165.cards.dao.GroupDao;
 import cz.juzna.pa165.cards.domain.Card;
 import cz.juzna.pa165.cards.domain.Group;
 import cz.juzna.pa165.cards.domain.Tag;
-
-import java.util.ArrayList;
-import java.util.List;
-import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 
 @Controller
 @RequestMapping("/browse")
 public class BrowseController extends BaseController {
 
-    @Autowired
+	public static final int CARDS_PER_PAGE = 24;
+
+	@Autowired
     private CardDao cards;
     @Autowired
     private GroupDao groups;
 
-	@Autowired
-	private User user;
-
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
     public String browse(Model model, HttpServletRequest request) {
-		List<Card> publicCards = cards.getPublicCards();
-		model.addAttribute("cards", publicCards);
-	
-		Integer offset = Integer.getInteger(request.getParameter("offset")); //offset jako kolikata stranka
-		Integer limit = Integer.getInteger(request.getParameter("limit")); //pocet prvku na stranku
-		
-		// model.addAttribute("cards", new ArrayList<Card>(cards.getAllCards())); // browse panel
-		model.addAttribute("recentPublicCards", cards.getPublicCards()); // side panel
-		if (user != null) {
-		    model.addAttribute("myGroups", new ArrayList<Group>(groups.findGroupsByOwner(user))); // side panel
+		// Paging
+		Integer offset, limit;
+		if (request.getParameter("page") != null) {
+			Integer page = Integer.parseInt(request.getParameter("page"));
+			offset = page * CARDS_PER_PAGE;
+			limit = CARDS_PER_PAGE;
+		} else {
+			offset = 0;
+			limit = CARDS_PER_PAGE;
+		}
+
+		model.addAttribute("cards", getUser() == null ? cards.getCards(offset, limit) : cards.getCards(offset, limit, getUser())); // browse panel
+		model.addAttribute("recentPublicCards", cards.getCards(0, 12)); // side panel
+		if (getUser() != null) {
+		    model.addAttribute("myGroups", new ArrayList<Group>(groups.findGroupsByOwner(getUser()))); // side panel
 		}
 		
 		return "browse/default";
@@ -57,11 +53,11 @@ public class BrowseController extends BaseController {
     public String browseCard(@PathVariable Long cardId, Model model) {
 		Card card = cards.findCardById(cardId);
 	
-		if (card != null && (!card.isPrivate() || card.getOwner().equals(user))) {
+		if (card != null && (!card.isPrivate() || card.getOwner().equals(getUser()))) {
 		    model.addAttribute("card", card);
-		    if (user != null) {
-		    	model.addAttribute("groupsOfCard", cards.getGroupsOfCard(card, user));
-			    model.addAttribute("allUsersGroups", groups.findGroupsByOwner(user));
+		    if (getUser() != null) {
+		    	model.addAttribute("groupsOfCard", cards.getGroupsOfCard(card, getUser()));
+			    model.addAttribute("allUsersGroups", groups.findGroupsByOwner(getUser()));
 		    }
 		}
 		
@@ -76,7 +72,7 @@ public class BrowseController extends BaseController {
     public String browseCardAddTag(@PathVariable Long cardId, Model model, HttpServletRequest request) {
     	
 		Card card = cards.findCardById(cardId);
-		Tag tag = new Tag(request.getParameter("tagger-key"), request.getParameter("tagger-value"), user, false);
+		Tag tag = new Tag(request.getParameter("tagger-key"), request.getParameter("tagger-value"), getUser(), false);
 		cards.addTag(card, tag);
 		
 		return "redirect:/browse/card/" + cardId +"/";
@@ -90,7 +86,7 @@ public class BrowseController extends BaseController {
     	Group group = null;
     	if (request.getParameter("grouper-name") != null) { // create new group
     		String groupName = request.getParameter("grouper-name");
-    		group = groups.addGroup(new Group(groupName, user));
+    		group = groups.addGroup(new Group(groupName, getUser()));
     	} else if (request.getParameter("grouper-id") != null) { // add to existing
     		Long groupId = Long.parseLong(request.getParameter("groupId"));
     		group = groups.findGroupById(groupId);
@@ -108,7 +104,7 @@ public class BrowseController extends BaseController {
     public String browseGroup(ModelMap model, HttpServletRequest request, @PathVariable Key groupId) {
 	Group group = groups.findGroupByKey(groupId);
 	List<Card> groupCards = new ArrayList<Card>();
-	if (group != null && group.getOwner().equals(user)) {
+	if (group != null && group.getOwner().equals(getUser())) {
 	    groupCards = groups.getCardsInGroup(group);
 	} else {
 	    group = null;
@@ -124,7 +120,7 @@ public class BrowseController extends BaseController {
     public String updateGroup(@ModelAttribute Group group, ModelMap model, HttpServletRequest request, @PathVariable Key groupId) {
 	Group groupOld = groups.findGroupByKey(groupId);
 	List<Card> groupCards = new ArrayList<Card>();
-	if (groupOld != null && groupOld.getOwner().equals(user)) {
+	if (groupOld != null && groupOld.getOwner().equals(getUser())) {
 	    groups.refreshGroup(group);
 	    groupCards = groups.getCardsInGroup(group);
 	} else {
@@ -140,7 +136,7 @@ public class BrowseController extends BaseController {
     public String deleteGroup(ModelMap model, HttpServletRequest request, @PathVariable Key groupId) {
 	Group group = groups.findGroupByKey(groupId);
 
-	if (group != null && group.getOwner().equals(user)) {
+	if (group != null && group.getOwner().equals(getUser())) {
 	    groups.removeGroup(group); // je u databaze kaskadove vymazavani nebo tady musim projit vsechny karty?
 	}
 
@@ -151,7 +147,7 @@ public class BrowseController extends BaseController {
     public String updateCard(@ModelAttribute Card card, ModelMap model, HttpServletRequest request, @PathVariable Key cardId) {
 	Card cardOld = cards.findCardByKey(cardId);
 
-	if (cardOld != null && (!cardOld.isPrivate() || cardOld.getOwner().equals(user))) {
+	if (cardOld != null && (!cardOld.isPrivate() || cardOld.getOwner().equals(getUser()))) {
 	    cards.refreshCard(card);
 	    model.addAttribute("card", card); // get all card attributes (id, name, owner, addedAt, private, ...
 	    model.addAttribute("relatedGroups", cards.getGroupsOfCard(card));//
@@ -167,7 +163,7 @@ public class BrowseController extends BaseController {
     public String deleteCard(ModelMap model, HttpServletRequest request, @PathVariable Key cardId) {
 	Card card = cards.findCardByKey(cardId);
 
-	if (card != null && card.getOwner().equals(user)) {
+	if (card != null && card.getOwner().equals(getUser())) {
 	    cards.removeCard(card);
 	}
 

@@ -2,7 +2,6 @@ package cz.juzna.pa165.cards.dao;
 
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.users.User;
-
 import cz.juzna.pa165.cards.domain.Card;
 import cz.juzna.pa165.cards.domain.Group;
 import cz.juzna.pa165.cards.domain.Tag;
@@ -37,8 +36,10 @@ public interface CardDao {
 	
 	public List<Group> getGroupsOfCard(Card card, User user);
 	
-	public List<Card> getPublicCards();
-	
+	public List<Card> getCards(Integer offset, Integer limit);
+
+	public List<Card> getCards(Integer offset, Integer limit, User owner);
+
 	public Card refreshCard(Card card);
 
 	public Card findCardById(Long cardId);
