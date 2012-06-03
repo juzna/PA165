@@ -120,6 +120,7 @@ public class JdoCardDao implements CardDao {
 			throw new IllegalArgumentException("Parameter key is null");
 		}
 		
+		pm = PMF.get().getPersistenceManager();
 		return pm.getObjectById(Card.class, key);
 	}
 
@@ -153,8 +154,7 @@ public class JdoCardDao implements CardDao {
 	}
 
 	@Override
-	public Card addTag(Card card, Tag tag) throws IllegalArgumentException,
-			JDOObjectNotFoundException {
+	public Card addTag(Card card, Tag tag) throws IllegalArgumentException, JDOObjectNotFoundException {
 		// neresi pridavani tagu k cizim private kartam
 		try {
 			card = this.refreshCard(card);
@@ -169,11 +169,13 @@ public class JdoCardDao implements CardDao {
 			throw new IllegalArgumentException("Argument tag is null");
 		}
 
+		/* Tags can be duplicate
 		Map<String, Tag> tagMap = this.getCardTags(card);
 		if (tagMap.containsKey(tag.getTagKey())) {
 			throw new IllegalArgumentException("Duplicite tag key "
 					+ tag.getTagKey());
 		}
+		*/
 
 		pm = PMF.get().getPersistenceManager();
 		Transaction tx = pm.currentTransaction();

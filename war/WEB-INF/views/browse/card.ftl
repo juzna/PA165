@@ -27,10 +27,10 @@
 				<#else>
 					<p class="well">No data</p>
 				</#if>
-				<form class="tagger margined">
-					<input class="tagger-key" type="text" placeholder="Key">
-					<label class="tagger-private"><input type="checkbox" class="checkbox"> Private</label>
-					<input class="tagger-value" type="text" placeholder="Value">
+				<form class="tagger margined" method="POST">
+					<input class="tagger-key" name="tagger-key" type="text" placeholder="Key">
+					<label class="tagger-private" name="tagger-private"><input type="checkbox" class="checkbox"> Private</label>
+					<input class="tagger-value" name="tagger-value" type="text" placeholder="Value">
 					<button class="tagger-submit btn" type="submit" >Add tag</button>
 				</form>
 			</div>

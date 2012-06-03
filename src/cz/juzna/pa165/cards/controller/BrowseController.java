@@ -9,6 +9,8 @@ import cz.juzna.pa165.cards.dao.CardDao;
 import cz.juzna.pa165.cards.dao.GroupDao;
 import cz.juzna.pa165.cards.domain.Card;
 import cz.juzna.pa165.cards.domain.Group;
+import cz.juzna.pa165.cards.domain.Tag;
+
 import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -63,10 +65,26 @@ public class BrowseController extends BaseController {
 		// model.addAttribute("relatedCards", …); // get Related cards, for example siblings in database
 		// model.addAttribute("relatedGroups", …); // get user's groups which contains this card
 	
-		
 		return "browse/card";
     }
+    
+    
+    @RequestMapping(value = "/card/{cardId}", method = RequestMethod.POST) // Adding tags
+    public String browseCardAddTag(@PathVariable Long cardId, Model model, HttpServletRequest request) {
+    	
+		Card card = cards.findCardById(cardId);
+		Tag tag = new Tag(request.getParameter("tagger-key"), request.getParameter("tagger-value"), user, false);
+		
+		cards.addTag(card, tag);
+	
+		model.addAttribute("card", card);
+		
+		return "browse/card";
+		// return "redirect:/appointments/card/" + cardId +"/";
+    }
 
+
+    
     /*
     @RequestMapping(value = "/group/{groupId}", method = RequestMethod.GET)
     public String browseGroup(ModelMap model, HttpServletRequest request, @PathVariable Key groupId) {
@@ -83,6 +101,7 @@ public class BrowseController extends BaseController {
 	return "browseGroup";
     }
 
+   
     @RequestMapping(value = "/group/{groupId}", method = RequestMethod.POST)
     public String updateGroup(@ModelAttribute Group group, ModelMap model, HttpServletRequest request, @PathVariable Key groupId) {
 	Group groupOld = groups.findGroupByKey(groupId);
@@ -109,7 +128,6 @@ public class BrowseController extends BaseController {
 
 	return "redirect:/browse/";
     }
-
     
     @RequestMapping(value = "/card/{cardId}", method = RequestMethod.POST)
     public String updateCard(@ModelAttribute Card card, ModelMap model, HttpServletRequest request, @PathVariable Key cardId) {
@@ -138,4 +156,5 @@ public class BrowseController extends BaseController {
 	return "redirect:/browse/";
     }
     */
+
 }
