@@ -12,13 +12,13 @@ public abstract class BaseController {
 
 	/** Always assign user attribute to model */
 	@ModelAttribute("user")
-	public User modelUser() {
+	public User getUser() {
 		return UserServiceFactory.getUserService().getCurrentUser();
 	}
 	
 	/** Always assign loginUrl attribute to model */
 	@ModelAttribute("loginUrl")
-	public String modelLoginUrl(HttpServletRequest request) {
+	public String getLoginUrl(HttpServletRequest request) {
 		return UserServiceFactory.getUserService().createLoginURL(request.getRequestURI());
 	}
 }
