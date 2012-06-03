@@ -27,11 +27,8 @@ public class Group implements Serializable {
 	@Temporal(javax.persistence.TemporalType.DATE)
 	private Date created;
 	
-	@Persistent(mappedBy = "group")
-	@Element(dependent = "true")
+	@Persistent
 	private Set<Key> cardKeys;
-	
-
 
 	public Group() {
 		this.created = new Date();

@@ -35,7 +35,7 @@ public interface CardDao {
 	
 	public Map<String, Tag> getUserCardTags(Card card, User owner);
 	
-	public List<Group> getGroupsOfCard(Card card);
+	public List<Group> getGroupsOfCard(Card card, User user);
 	
 	public List<Card> getPublicCards();
 	

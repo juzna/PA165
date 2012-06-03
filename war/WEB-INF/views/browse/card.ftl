@@ -21,13 +21,14 @@
 				<#if card.tags??>
 					<dl class="card-tags">
 						<#list card.tags as tag>
-							<dt>${tag.tagKey}</dt><dd>${tag.content}</dd>
+							<dt>${tag.tagKey!"Undefined"}</dt><dd>${tag.content!"Undefined"}</dd>
 						</#list>
 					</dl>
 				<#else>
 					<p class="well">No data</p>
 				</#if>
 				<form class="tagger margined" method="POST">
+					<input type="hidden" name="do" value="addTag" />
 					<input class="tagger-key" name="tagger-key" type="text" placeholder="Key">
 					<label class="tagger-private" name="tagger-private"><input type="checkbox" class="checkbox"> Private</label>
 					<input class="tagger-value" name="tagger-value" type="text" placeholder="Value">
@@ -37,19 +38,49 @@
 		</div>
 
 		<div class="span6">
-			<section id="browse-card-belongs">
-				<header><h3>Groups containing this card <a class="btn btn-mini">Add to group</a></h3></header>
-				<ul class="nav nav-tabs nav-stacked">
-					{foreach $relatedGroups as $group}
-					{if $iterator->odd}
-					<li class="group"><a href="#">{$group['name']}<span class="badge badge-info count">{$group['count']}</span></a></li>
-					{/if}
-					{/foreach}
-				</ul>
-			</section>
-			<section id="browse-card-ownership" class="marginer">
-				<p class="alert alert-info">This card belongs to you. <a class="btn btn-primary">Manage this card</a></p>
-			</section>
+			<#if user??>
+				<section id="browse-card-belongs">
+					<header><h3>Groups containing this card <a class="btn btn-mini">Add to group</a></h3></header>
+					<#if groupsOfCard??>
+					<ul class="nav nav-tabs nav-stacked">
+						<#list groupsOfCard as group>
+							<li class="group"><a href="/browse/group/${group.id}/">${group.name}</a></li>
+						</#list>
+					</ul>
+					<#else>
+						<p class="well">No data</p>
+					</#if>
+				</section>
+			<#else>
+				<p class="well">Auth area</p>
+			</#if>
+			
+			<#if card.owner == user>
+				<section id="browse-card-ownership" class="marginer">
+					<p class="alert alert-info">This card belongs to you. <a class="btn btn-primary">Manage this card</a></p>
+				</section>
+			</#if>
+			
+			<#if user??>
+				<section id="browse-card-addToGroupTemp">
+				<header><h4>Add to your group</h4></header>
+					<ul>
+					<#if allUsersGroups??>
+						<#list allUsersGroups as group>
+							<li class="group"><a href="#">${group.name}</a></li>
+						</#list>
+					<#else>
+						<p class="well">No data</p>
+					</#if>
+					</ul>
+					<form method="POST">
+						<input type="hidden" name="do" value="addToGroup" />
+						<input class="grouper-name" name="grouper-name" type="text" placeholder="Group name">
+						<button class="grouper-submit btn" type="submit" >Add group</button>
+					</form>
+				</section>
+			</#if>
+			
 		</div>
 	</div>
 

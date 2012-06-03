@@ -59,7 +59,10 @@ public class BrowseController extends BaseController {
 	
 		if (card != null && (!card.isPrivate() || card.getOwner().equals(user))) {
 		    model.addAttribute("card", card);
-		    model.addAttribute("relatedGroups", cards.getGroupsOfCard(card));
+		    if (user != null) {
+		    	model.addAttribute("groupsOfCard", cards.getGroupsOfCard(card, user));
+			    model.addAttribute("allUsersGroups", groups.findGroupsByOwner(user));
+		    }
 		}
 		
 		// model.addAttribute("relatedCards", …); // get Related cards, for example siblings in database
@@ -69,20 +72,35 @@ public class BrowseController extends BaseController {
     }
     
     
-    @RequestMapping(value = "/card/{cardId}", method = RequestMethod.POST) // Adding tags
+    @RequestMapping(value = "/card/{cardId}", method = RequestMethod.POST, params="do=addTag")
     public String browseCardAddTag(@PathVariable Long cardId, Model model, HttpServletRequest request) {
     	
 		Card card = cards.findCardById(cardId);
 		Tag tag = new Tag(request.getParameter("tagger-key"), request.getParameter("tagger-value"), user, false);
-		
 		cards.addTag(card, tag);
-	
-		model.addAttribute("card", card);
 		
-		return "browse/card";
-		// return "redirect:/appointments/card/" + cardId +"/";
+		return "redirect:/browse/card/" + cardId +"/";
     }
-
+    
+    @RequestMapping(value = "/card/{cardId}", method = RequestMethod.POST, params="do=addToGroup")
+    public String browseCardAddtoGroup(@PathVariable Long cardId, Model model, HttpServletRequest request) {
+    	
+    	Card card = cards.findCardById(cardId);
+    	
+    	Group group = null;
+    	if (request.getParameter("grouper-name") != null) { // create new group
+    		String groupName = request.getParameter("grouper-name");
+    		group = groups.addGroup(new Group(groupName, user));
+    	} else if (request.getParameter("grouper-id") != null) { // add to existing
+    		Long groupId = Long.parseLong(request.getParameter("groupId"));
+    		group = groups.findGroupById(groupId);
+		}
+    	
+    	groups.addCardToGroup(group, card);
+    	
+    	return "redirect:/browse/card/" + cardId +"/";
+    	
+    }
 
     
     /*

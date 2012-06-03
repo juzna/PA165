@@ -332,8 +332,7 @@ public class JdoCardDao implements CardDao {
 	}
 
 	@Override
-	public List<Group> getGroupsOfCard(Card card)
-			throws IllegalArgumentException, JDOObjectNotFoundException {
+	public List<Group> getGroupsOfCard(Card card, User user) throws IllegalArgumentException, JDOObjectNotFoundException {
 		try {
 			card = this.refreshCard(card);
 		} catch (IllegalArgumentException e) {
@@ -343,6 +342,7 @@ public class JdoCardDao implements CardDao {
 			// card not in DB
 			throw e;
 		}
+		
 		pm = PMF.get().getPersistenceManager();
 		Transaction tx = pm.currentTransaction();
 		ArrayList<Group> groupList = new ArrayList<Group>();

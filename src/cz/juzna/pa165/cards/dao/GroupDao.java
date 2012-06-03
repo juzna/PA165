@@ -19,6 +19,8 @@ public interface GroupDao {
 	public List<Group> getAllGroups();
 
 	public Group findGroupByKey(Key key);
+	
+	public Group findGroupById(Long id);
 
 	public List<Group> findGroupsByOwner(User owner);
 
@@ -29,4 +31,6 @@ public interface GroupDao {
 	public List<Card> getCardsInGroup(Group group);
 		
 	public Group refreshGroup(Group group);
+
+	
 }

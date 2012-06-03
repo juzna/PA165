@@ -1,6 +1,7 @@
 package cz.juzna.pa165.cards.dao.jdo;
 
 import com.google.appengine.api.datastore.Key;
+import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.users.User;
 
 import cz.juzna.pa165.cards.dao.*;
@@ -130,6 +131,11 @@ public class JdoGroupDao implements GroupDao {
 
 		return group;
 	}
+	
+	@Override
+	public Group findGroupById(Long id) throws IllegalArgumentException {
+		return this.findGroupByKey(KeyFactory.createKey("Group", id));
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -163,8 +169,8 @@ public class JdoGroupDao implements GroupDao {
 
 	@Override
 	// meni i card, ale nevraci ji!
-	public Group addCardToGroup(Group group, Card card)
-			throws IllegalArgumentException, JDOObjectNotFoundException {
+	public Group addCardToGroup(Group group, Card card) throws IllegalArgumentException, JDOObjectNotFoundException {
+		/*
 		try {
 			card = cardDao.refreshCard(card);
 			group = this.refreshGroup(group);
@@ -175,6 +181,7 @@ public class JdoGroupDao implements GroupDao {
 			// card or group not in DB
 			throw e;
 		}
+		*/
 
 		pm = PMF.get().getPersistenceManager();
 		Transaction tx = pm.currentTransaction();
