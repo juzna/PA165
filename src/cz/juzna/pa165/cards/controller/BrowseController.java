@@ -35,11 +35,14 @@ public class BrowseController extends BaseController {
 		// Pagination
 		Integer offset, limit;
 		if (request.getParameter("page") != null) {
-			offset = Integer.parseInt(request.getParameter("page")) * CARDS_PER_PAGE;
+			offset = ( Integer.parseInt(request.getParameter("page")) - 1 ) * CARDS_PER_PAGE;
 			limit = CARDS_PER_PAGE;
+			model.addAttribute("page", Integer.parseInt(request.getParameter("page")));
 		} else {
 			offset = 0;
 			limit = CARDS_PER_PAGE;
+			model.addAttribute("page", 1);
+			
 		}
 		
 		if (request.getParameter("group") != null) {

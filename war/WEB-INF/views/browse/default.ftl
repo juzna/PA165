@@ -5,7 +5,7 @@
 
 		<div class="span4">
 			<section id="browse-groups">
-				<header><h2>My groups <a class="btn btn-mini">Manage groups</a></h2></header>
+				<header><h2>My groups <a href="/account/groups/" class="btn btn-mini">Manage groups</a></h2></header>
 				<#if user??>
 					<#if groups??>
 						<ul class="nav nav-tabs nav-stacked">
@@ -49,16 +49,20 @@
 									<img src="/cardImage/${card.img.getKeyString()}" />
 								</div>
 								<div class="card-meta">
-									<p>By <a href="/browse/user/${card.owner}/">${card.owner}</a> at ${card.created?date}</p>
+									<p>By ${card.owner} at ${card.created?date}</p>
 								</div>
 							</div>
 							<div class="span6">
 								<h4 class="card-name"><a href="/browse/card/${card.key.id?c}/">${card.name!}</a></h4>
-								<dl class="card-tags">
-									<#list card.tags as tag>
-										<dt>${tag.tagKey}</dt><dd>${tag.content}</dd>
-									</#list>
-								</dl>
+								<#if card.tags??>
+									<dl class="card-tags">
+										<#list card.tags as tag>
+											<dt>${tag.tagKey!"Undefined"}</dt><dd>${tag.content!"Undefined"}</dd>
+										</#list>
+									</dl>
+								<#else>
+									<p class="well">No data</p>
+								</#if>
 							</div>
 						</div>
 					</#list>
@@ -67,12 +71,12 @@
 				</#if>
 				<div class="pagination">
 					<ul>
-						<li class="disabled"><a href="#">«</a></li>
-						<li class="active"><a href="#">1</a></li>
-						<li><a href="#">2</a></li>
-						<li><a href="#">3</a></li>
-						<li><a href="#">4</a></li>
-						<li><a href="#">»</a></li>
+						<#if page <= 1>
+							<li class="disabled"><a>«</a></li>
+						<#else>
+							<li><a href="/browse/?page=${page - 1}">«</a></li>
+						</#if>
+						<li><a href="/browse/?page=${page + 1}">»</a></li>
 					</ul>
 				</div>
 			</section>

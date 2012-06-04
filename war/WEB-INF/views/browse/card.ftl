@@ -9,7 +9,7 @@
 		<div class="span12">
 			<div class="card-image"><img src="/cardImage/${card.img.getKeyString()}" /></div>
 			<div class="card-meta">
-				<p>By <a href="/browse/user/${card.owner}/">${card.owner}</a> at ${card.created?date}</p>
+				<p>By ${card.owner} at ${card.created?date}</p>
 			</div>
 		</div>
 	</section>

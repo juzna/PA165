@@ -376,7 +376,7 @@ public class JdoCardDao implements CardDao {
 	protected List<Card> _getCards(Integer offset, Integer limit, User owner) {
 		// Hijack to a hack method ;)
 		if (owner != null) {
-			return _getCardsFuckMeIfUCan(offset, limit, owner);
+			return _getCardsWhenLogged(offset, limit, owner);
 		}
 
 		pm = PMF.get().getPersistenceManager();
@@ -410,7 +410,7 @@ public class JdoCardDao implements CardDao {
 
 	/** AppEngine can't do this in database, so we have to fetch all the data and then filter and sort it */
 	@SuppressWarnings("unchecked")
-	protected List<Card> _getCardsFuckMeIfUCan(Integer offset, Integer limit, User owner) {
+	protected List<Card> _getCardsWhenLogged(Integer offset, Integer limit, User owner) {
 		pm = PMF.get().getPersistenceManager();
 		List<Card> result = new ArrayList<Card>(), tmp;
 		Query query = null;
@@ -443,7 +443,7 @@ public class JdoCardDao implements CardDao {
 
 		} finally {
 			query.closeAll();
-			pm.close();
+			// pm.close();
 		}
 	}
 
