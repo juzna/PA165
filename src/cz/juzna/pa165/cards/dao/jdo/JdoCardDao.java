@@ -422,8 +422,8 @@ public class JdoCardDao implements CardDao {
 			tmp = (List<Card>) query.execute();
 
 			// Filter
-			for(Card card : tmp) {
-				if ( ! card.getPrivacy()  || card.getOwner().equals(owner)) {
+			for (Card card : tmp) {
+				if ( ( ! card.getPrivacy()) || card.getOwner().equals(owner)) {
 					result.add(card);
 				}
 			}
@@ -433,7 +433,8 @@ public class JdoCardDao implements CardDao {
 
 			// Limit
 			if (result.size() > 0) {
-				result = result.subList(offset, Math.min(offset + limit, result.size() - 1));
+				if (offset >= result.size()) result = new ArrayList<Card>(); // we're too far
+				else result = result.subList(offset, Math.min(offset + limit, result.size()));
 			}
 
 
