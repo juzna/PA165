@@ -52,7 +52,7 @@
 	<!-- HTTP interceptors (e.g. to cache) -->
 	<mvc:interceptors>
 		<mvc:interceptor>
-			<mvc:mapping path="/blob/*" />
+			<mvc:mapping path="/cardImage/*" />
 			<bean class="org.springframework.web.servlet.mvc.WebContentInterceptor" >
 				<property name="cacheSeconds" value="2592000" />
 			</bean>
