@@ -10,7 +10,11 @@
 					<div class="control-group">
 						<label class="control-label" for="form-upload-image">Select image:</label>
 						<div class="controls">
-							<input class="input-file" id="form-upload-image" name="form-upload-image" type="file" />
+							<input class="input-file" id="form-upload-image" name="form-upload-image" type="file" onchange="photoChanged(this.files)" />
+						</div>
+						<div id="PhotoPreviewWrapper" style="height: 300px; overflow: hidden; width: 400px; margin-bottom: 5px; display: none;">
+							<strong>Preview</strong>
+							<img id="PhotoPreview" alt="Photo" src="http://placehold.it/220x120" alt="Preview" />
 						</div>
 					</div>
 					<div class="control-group">
@@ -44,6 +48,21 @@
 		</div>
 	</div>
 </div>
+<script type="text/javascript">
+	window.URL = window.URL || window.webkitURL || window.mozURL;
+	function photoChanged(files) {
+		if (!files || !files.length) return;
+		var file = files[0];
+		if (file.type != 'image/jpeg' /*&& file.type != 'image/png'*/) {
+			alert('The photo must be in JPEG format');
+			$("#form-upload-image").val('');
+			return;
+		}
+		if (typeof window.URL == 'undefined') return;
+		$('#PhotoPreview').attr('src', window.URL.createObjectURL(file));
+		$('#PhotoPreviewWrapper').show();
+	}
+</script>
 <#include "/layout/debug.ftl">
 <#include "/layout/footer.ftl">
 <#include "/layout/foot.ftl">
