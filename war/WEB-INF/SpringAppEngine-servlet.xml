@@ -47,4 +47,16 @@
 	      factory-bean="persistenceManagerFactory" factory-method="getPersistenceManager"
 	      destroy-method="close"
 	      scope="prototype" />
+
+
+	<!-- HTTP interceptors (e.g. to cache) -->
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/blob/*" />
+			<bean class="org.springframework.web.servlet.mvc.WebContentInterceptor" >
+				<property name="cacheSeconds" value="2592000" />
+			</bean>
+		</mvc:interceptor>
+	</mvc:interceptors>
+
 </beans>
