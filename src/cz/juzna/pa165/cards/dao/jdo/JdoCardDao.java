@@ -10,6 +10,7 @@ import cz.juzna.pa165.cards.domain.Tag;
 import cz.juzna.pa165.cards.util.CardByDateComparator;
 
 import javax.jdo.*;
+
 import java.util.*;
 
 public class JdoCardDao implements CardDao {
@@ -49,10 +50,10 @@ public class JdoCardDao implements CardDao {
 		Group group = new Group();
 		try {
 			tx.begin();
-//			card = pm.getObjectById(Card.class, card.getGaeKey()); //TODO: Wierd
+//			card = pm.getObjectById(Card.class, card.getKey()); //TODO: Wierd
 //			for (int i = 0; i < groupKeys.size(); i++) {
 //				group = pm.getObjectById(Group.class, iterator.next());
-//				group.getCardKeys().remove(card.getGaeKey());
+//				group.getCardKeys().remove(card.getKey());
 //				pm.makePersistent(group);
 //			}
 			pm.deletePersistent(card);
@@ -133,6 +134,30 @@ public class JdoCardDao implements CardDao {
 	public Card findCardById(Long cardId) {
 		return this.findCardByKey(KeyFactory.createKey("Card", cardId));
 	}
+	
+	@Override
+	public Tag findTagByKey(Key key) throws IllegalArgumentException {
+		if (key == null) {
+			throw new IllegalArgumentException("Parameter key is null");
+		}
+		pm = PMF.get().getPersistenceManager();
+		pm.getFetchPlan().setGroup(FetchGroup.ALL);
+		Tag tag = null;
+		try {
+			tag = pm.getObjectById(Tag.class, key);
+		} finally {
+			pm.close();
+		}
+		return tag;
+	}
+	
+	@Override
+	public Tag findTagById(Long tagId) {
+		return this.findTagByKey(KeyFactory.createKey("Tag", tagId));
+	}
+	
+	
+	
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -230,7 +255,7 @@ public class JdoCardDao implements CardDao {
 		Transaction tx = pm.currentTransaction();
 		try {
 			tx.begin();
-			tag = pm.getObjectById(Tag.class, tag.getGaeKey());
+			tag = pm.getObjectById(Tag.class, tag.getKey());
 			card = pm.getObjectById(Card.class, card.getKey());
 			card.getTags().remove(tag);
 			pm.deletePersistent(tag);
@@ -243,6 +268,16 @@ public class JdoCardDao implements CardDao {
 		}
 
 		return card;
+	}
+	
+	@Override
+	public void removeTag(Tag tag) {
+		pm = PMF.get().getPersistenceManager();
+		try {
+			pm.deletePersistent(tag);
+		} finally {
+			pm.close();
+		}
 	}
 
 	@Override

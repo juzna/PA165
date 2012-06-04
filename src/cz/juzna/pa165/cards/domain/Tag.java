@@ -15,7 +15,7 @@ public class Tag implements Serializable {
 
 	@PrimaryKey
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-	private Key gaeKey;
+	private Key key;
 	
 	@Persistent
 	private String tagKey;
@@ -57,12 +57,12 @@ public class Tag implements Serializable {
 		this.owner = tag.getOwner();
 	}
 
-	public Key getGaeKey() {
-		return gaeKey;
+	public Key getKey() {
+		return key;
 	}
 
-	public void setGaeKey(Key gaeKey) {
-		this.gaeKey = gaeKey;
+	public void setKey(Key key) {
+		this.key = key;
 	}
 
 	public String getName() {

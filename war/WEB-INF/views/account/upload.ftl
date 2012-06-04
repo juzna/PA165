@@ -38,7 +38,7 @@
 								<div class="span6">
 									<label class="radio">
 										<dl>
-											<dt><input type="radio" value="private" name="form-editor-privacy">Private</dt>
+											<dt><input type="radio" value="private" name="form-upload-privacy">Private</dt>
 											<dd>Only you can see, edit and add fields to this card.</dd>
 										</dl>
 									</label>

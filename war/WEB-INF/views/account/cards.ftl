@@ -6,7 +6,7 @@
 		<div class="span8">
 			<section id="account-cards">
 				<header><h2>Cards overview</h2></header>
-				<#if cards??>
+				<#if (cards?size > 0)>
 					<div class="row-fluid">
 						<#list cards as card>
 							<div class="card card_thumb span4" data-id="${card.key.id?c}">
@@ -20,7 +20,7 @@
 						</#list>
 					</ul>
 				<#else>
-					<p class="well">No data</p>
+					<p class="well">You have no cards.</p>
 				</#if>
 			</section>
 			</section>

@@ -6,7 +6,7 @@
 		<div class="span8">
 			<section id="account-">
 				<header><h2>Groups overview</h2></header>
-				<#if groups??>
+				<#if (groups?size > 0)>
 					<#list groups as group>
 						<div class="group-item" data-id="${group.key.id?c}">
 							<form method="POST" class="form-horizontal">
@@ -18,7 +18,7 @@
 						</div>
 					</#list>
 				<#else>
-					<p class="well">No groups</p>
+					<p class="well">You have no groups. Go to card detail to create one.</p>
 				</#if>
 			</section>
 		</div>

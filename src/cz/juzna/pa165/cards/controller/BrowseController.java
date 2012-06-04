@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import com.google.appengine.api.datastore.KeyFactory;
+
 import cz.juzna.pa165.cards.dao.CardDao;
 import cz.juzna.pa165.cards.dao.GroupDao;
 import cz.juzna.pa165.cards.domain.Card;
@@ -87,8 +89,20 @@ public class BrowseController extends BaseController {
 		cards.addTag(card, tag);
 		
 		return "redirect:/browse/card/" + cardId +"/";
-    }
-    
+	}
+	
+	@RequestMapping(value = "/card/{cardId}", method = RequestMethod.POST, params="do=deleteTag")
+	public String browseCardDeleteTag(@PathVariable Long cardId, ModelMap model, HttpServletRequest request) {
+		
+		System.out.print(KeyFactory.createKeyString("Tag", request.getParameter("tagId")));
+
+		Tag tag = cards.findTagByKey(KeyFactory.createKey("Tag", request.getParameter("tagId")));
+		cards.removeTag(tag);
+		
+		
+		return "redirect:/browse/card/" + cardId +"/";
+	}
+
 	@RequestMapping(value = "/card/{cardId}", method = RequestMethod.POST, params="do=addToGroup")
 	public String browseCardAddtoGroup(@PathVariable Long cardId, ModelMap model, HttpServletRequest request) {
 		

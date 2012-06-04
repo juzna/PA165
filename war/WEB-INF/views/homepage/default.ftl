@@ -12,7 +12,7 @@
 		<div class="span8">
 			<section id="homepage-activity">
 				<header><h2>Recent public cards</h2></header>
-				<#if (recentPublicCards)??>
+				<#if (recentPublicCards?size > 0)>
 					<#list recentPublicCards as card>
 						<div class="card row-fluid">
 							<div class="span6">
@@ -34,7 +34,7 @@
 						</div>
 					</#list>
 				<#else>
-					<p class="alert alert-danger">No data</p>
+					<p class="alert alert-danger">No cards</p>
 				</#if>
 			</section>
 		</div>

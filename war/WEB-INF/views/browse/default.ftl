@@ -41,7 +41,7 @@
 		<div class="span8">
 			<section id="browse-browser">
 				<header><h2>Browsing all mine and public cards</h2></header>
-				<#if cards??>
+				<#if (cards?size > 0)>
 					<#list cards as card>
 						<div class="card row-fluid">
 							<div class="span6">
@@ -67,7 +67,7 @@
 						</div>
 					</#list>
 				<#else>
-					<p class="well">No data</p>
+					<p class="well">No cards</p>
 				</#if>
 				<div class="pagination">
 					<ul>

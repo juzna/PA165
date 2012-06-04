@@ -18,14 +18,24 @@
 		<div class="span6">
 			<div class="card" style="margin-top: 0px;">
 				<h4 class="card-name">${card.name}</h4>
-				<#if card.tags??>
+				<#if (card.tags?size > 0)>
 					<dl class="card-tags">
 						<#list card.tags as tag>
-							<dt>${tag.tagKey!"Undefined"}</dt><dd>${tag.content!"Undefined"}</dd>
+							<dt>
+								<#if card.owner == user>
+									<form method="POST" class="form-delete">
+										<input type="hidden" name="do" value="deleteTag" />
+										<input type="hidden" name="tagId" value="${tag.key.id?c}" />
+										<input type="image" src="/img/delete.png" />
+									</form>
+								</#if>
+								${tag.tagKey!"Undefined"}
+							</dt>
+							<dd>${tag.content!"Undefined"}</dd>
 						</#list>
 					</dl>
 				<#else>
-					<p class="well">No data</p>
+					<p class="well">No tags</p>
 				</#if>
 				<form class="tagger margined" method="POST">
 					<input type="hidden" name="do" value="addTag" />
@@ -38,7 +48,7 @@
 		</div>
 
 		<div class="span6">
-			<#if card.owner == user>
+			<#if user?? && card.owner == user>
 				<section id="browse-card-ownership" class="marginer">
 					<p class="alert alert-info">This card belongs to you. <a href="/account/card/${card.key.id?c}/"><strong>Manage this card</strong></a></p>
 				</section>
@@ -47,7 +57,7 @@
 			<#if user??>
 				<section id="browse-card-belongs">
 					<header><h3>Groups containing this card</h3></header>
-					<#if groupsOfCard??>
+					<#if (groupsOfCard?size > 0)>
 					<ul class="nav nav-tabs nav-stacked">
 						<#list groupsOfCard as group>
 							<li class="group">
@@ -61,11 +71,11 @@
 						</#list>
 					</ul>
 					<#else>
-						<p class="well">No data</p>
+						<p class="well">You have no groups.</p>
 					</#if>
 				</section>
 			<#else>
-				<p class="well">Auth area</p>
+				<p class="well">You have to be logged in.</p>
 			</#if>
 			
 			<#if user??>
@@ -74,7 +84,7 @@
 					<form method="POST" class="form-horizontal">
 						<input type="hidden" name="do" value="addToGroup" />
 						<select name="grouper-id">
-							<#if allUsersGroups??>
+							<#if (allUsersGroups?size > 0)>
 								<option value="">Select group...</option>
 								<#list allUsersGroups as group>
 									<option value="${group.key.id?c}">${group.name}</option>

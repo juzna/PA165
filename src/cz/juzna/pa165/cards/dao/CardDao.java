@@ -23,12 +23,17 @@ public interface CardDao {
 	public List<Card> getAllCards();
 
 	public Card findCardByKey(Key key);
+	public Card findCardById(Long cardId);
+	
+	public Tag findTagByKey(Key key);
+	public Tag findTagById(Long cardId);
 
 	public List<Card> findCardsByOwner(User owner);
 
 	public Card addTag(Card card, Tag tag);
 
 	public Card removeTag(Card card, String tagKey);
+	public void removeTag(Tag tag);
 
 	public Map<String, Tag> getCardTags(Card card);
 	
@@ -44,6 +49,8 @@ public interface CardDao {
 
 	public Card refreshCard(Card card);
 
-	public Card findCardById(Long cardId);
+	
+
+	
 
 }
