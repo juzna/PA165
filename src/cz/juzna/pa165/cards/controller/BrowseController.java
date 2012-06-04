@@ -1,19 +1,21 @@
 package cz.juzna.pa165.cards.controller;
 
+import java.util.ArrayList;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
 import cz.juzna.pa165.cards.dao.CardDao;
 import cz.juzna.pa165.cards.dao.GroupDao;
 import cz.juzna.pa165.cards.domain.Card;
 import cz.juzna.pa165.cards.domain.Group;
 import cz.juzna.pa165.cards.domain.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
 
 @Controller
 @RequestMapping("/browse")
@@ -28,7 +30,7 @@ public class BrowseController extends BaseController {
 
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-    public String browse(Model model, HttpServletRequest request) {
+    public String browse(ModelMap model, HttpServletRequest request) {
 		
 		// Pagination
 		Integer offset, limit;
@@ -57,7 +59,7 @@ public class BrowseController extends BaseController {
 	}
 	
 	@RequestMapping(value = "/card/{cardId}", method = RequestMethod.GET)
-	public String browseCard(@PathVariable Long cardId, Model model) {
+	public String browseCard(@PathVariable Long cardId, ModelMap model) {
 		Card card = cards.findCardById(cardId);
 	
 		if (card != null && (!card.isPrivate() || card.getOwner().equals(getUser()))) {
@@ -75,7 +77,7 @@ public class BrowseController extends BaseController {
 	
 
 	@RequestMapping(value = "/card/{cardId}", method = RequestMethod.POST, params="do=addTag")
-	public String browseCardAddTag(@PathVariable Long cardId, Model model, HttpServletRequest request) {
+	public String browseCardAddTag(@PathVariable Long cardId, ModelMap model, HttpServletRequest request) {
 		
 		Card card = cards.findCardById(cardId);
 		Tag tag = new Tag(request.getParameter("tagger-key"), request.getParameter("tagger-value"), getUser(), false);
@@ -85,7 +87,7 @@ public class BrowseController extends BaseController {
     }
     
 	@RequestMapping(value = "/card/{cardId}", method = RequestMethod.POST, params="do=addToGroup")
-	public String browseCardAddtoGroup(@PathVariable Long cardId, Model model, HttpServletRequest request) {
+	public String browseCardAddtoGroup(@PathVariable Long cardId, ModelMap model, HttpServletRequest request) {
 		
 		Card card = cards.findCardById(cardId);
 		
@@ -105,7 +107,7 @@ public class BrowseController extends BaseController {
 	}
 	
 	@RequestMapping(value = "/card/{cardId}", method = RequestMethod.POST, params="do=removeFromGroup")
-	public String browseCardRemoveFromGroup(@PathVariable Long cardId, Model model, HttpServletRequest request) {
+	public String browseCardRemoveFromGroup(@PathVariable Long cardId, ModelMap model, HttpServletRequest request) {
 		
 		Card card = cards.findCardById(cardId);
 		

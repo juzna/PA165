@@ -1,17 +1,12 @@
 package cz.juzna.pa165.cards.controller;
 
-import com.google.appengine.api.blobstore.BlobKey;
-import com.google.appengine.api.datastore.Key;
-import com.google.appengine.api.users.User;
-import cz.juzna.pa165.cards.dao.CardDao;
-import cz.juzna.pa165.cards.dao.GroupDao;
-import cz.juzna.pa165.cards.domain.Card;
-import cz.juzna.pa165.cards.domain.Group;
-import cz.juzna.pa165.cards.util.BlobHelper;
+import java.io.IOException;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,10 +15,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import com.google.appengine.api.blobstore.BlobKey;
+import com.google.appengine.api.users.User;
+
+import cz.juzna.pa165.cards.dao.CardDao;
+import cz.juzna.pa165.cards.dao.GroupDao;
+import cz.juzna.pa165.cards.domain.Card;
+import cz.juzna.pa165.cards.domain.Group;
+import cz.juzna.pa165.cards.util.BlobHelper;
 
 @Controller
 @RequestMapping("account/*")
@@ -45,19 +44,19 @@ public class AccountController extends BaseController {
 
 	
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public String account(Model model, HttpServletRequest request) {
+	public String account(ModelMap model, HttpServletRequest request) {
 		return "account/default";
 	}
 
 	@RequestMapping(value = "/cards", method = RequestMethod.GET)
-	public String accountCards(Model model, HttpServletRequest request) {
+	public String accountCards(ModelMap model, HttpServletRequest request) {
 		model.addAttribute("cards", cards.findCardsByOwner(user));
 		return "account/cards";
 	}
 
 
 	@RequestMapping(value = "/card/{cardId}", method = RequestMethod.GET)
-	public String accountCard(@PathVariable Long cardId, Model model, HttpServletRequest request) {
+	public String accountCard(@PathVariable Long cardId, ModelMap model, HttpServletRequest request) {
 		
 		Card card = cards.findCardById(cardId);
 		if (card.isPrivate() && !card.getOwner().equals(getUser())) {
@@ -69,7 +68,7 @@ public class AccountController extends BaseController {
 	}
 	
 	@RequestMapping(value = "/card/{cardId}", method = RequestMethod.POST, params="do=edit")
-	public String accountCardEdit(@PathVariable Long cardId, Model model, HttpServletRequest request) {
+	public String accountCardEdit(@PathVariable Long cardId, ModelMap model, HttpServletRequest request) {
 		
 		Card card = cards.findCardById(cardId);
 		if (!card.getOwner().equals(getUser())) {
@@ -88,7 +87,7 @@ public class AccountController extends BaseController {
 	}
 	
 	@RequestMapping(value = "/card/{cardId}", method = RequestMethod.POST, params="do=delete")
-	public String accountCardDelete(@PathVariable Long cardId, Model model, HttpServletRequest request) {
+	public String accountCardDelete(@PathVariable Long cardId, ModelMap model, HttpServletRequest request) {
 		
 		Card card = cards.findCardById(cardId);
 		if (!card.getOwner().equals(getUser())) {
@@ -133,7 +132,7 @@ public class AccountController extends BaseController {
 
 
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
-	public String accountUploadProcess(@RequestParam("form-upload-image") MultipartFile file, MultipartHttpServletRequest request, Model model) throws IOException {
+	public String accountUploadProcess(@RequestParam("form-upload-image") MultipartFile file, MultipartHttpServletRequest request, ModelMap model) throws IOException {
 		model.addAttribute("name", request.getParameter("form-upload-name"));
 		model.addAttribute("privacy", request.getParameter("form-upload-privacy"));
 		model.addAttribute("file", file.getSize());
