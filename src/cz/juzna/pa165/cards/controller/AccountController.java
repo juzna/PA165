@@ -35,28 +35,27 @@ public class AccountController extends BaseController {
     private GroupDao groups;
 	@Autowired
 	private User user;
-	
-	public AccountController() {
-		if (getUser() == null) {
-			//TODO: Forbid access
-		}
-	}
-
-	
+		
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String account(ModelMap model, HttpServletRequest request) {
+		if (getUser() == null) {model = null; return "account/forbidden";}
+		
 		return "account/default";
 	}
 
 	@RequestMapping(value = "/cards", method = RequestMethod.GET)
 	public String accountCards(ModelMap model, HttpServletRequest request) {
+		if (getUser() == null) {model = null; return "account/forbidden";}
+		
 		model.addAttribute("cards", cards.findCardsByOwner(user));
+		
 		return "account/cards";
 	}
 
 
 	@RequestMapping(value = "/card/{cardId}", method = RequestMethod.GET)
 	public String accountCard(@PathVariable Long cardId, ModelMap model, HttpServletRequest request) {
+		if (getUser() == null) {model = null; return "account/forbidden";}
 		
 		Card card = cards.findCardById(cardId);
 		if (card.isPrivate() && !card.getOwner().equals(getUser())) {
@@ -64,11 +63,13 @@ public class AccountController extends BaseController {
 		}
 
 		model.addAttribute("card", card);
+		
 		return "account/card";
 	}
 	
 	@RequestMapping(value = "/card/{cardId}", method = RequestMethod.POST, params="do=edit")
 	public String accountCardEdit(@PathVariable Long cardId, ModelMap model, HttpServletRequest request) {
+		if (getUser() == null) {model = null; return "account/forbidden";}
 		
 		Card card = cards.findCardById(cardId);
 		if (!card.getOwner().equals(getUser())) {
@@ -88,6 +89,7 @@ public class AccountController extends BaseController {
 	
 	@RequestMapping(value = "/card/{cardId}", method = RequestMethod.POST, params="do=delete")
 	public String accountCardDelete(@PathVariable Long cardId, ModelMap model, HttpServletRequest request) {
+		if (getUser() == null) {model = null; return "account/forbidden";}
 		
 		Card card = cards.findCardById(cardId);
 		if (!card.getOwner().equals(getUser())) {
@@ -102,12 +104,16 @@ public class AccountController extends BaseController {
 	
 	@RequestMapping(value = "/groups", method = RequestMethod.GET)
 	public String accountGroups(ModelMap model, HttpServletRequest request) {
-		model.addAttribute("groups", groups.findGroupsByOwner(getUser())); // all users groups
+		if (getUser() == null) {model = null; return "account/forbidden";}
+		
+		model.addAttribute("groups", groups.findGroupsByOwner(getUser()));
+		
 		return "account/groups";
 	}
 	
 	@RequestMapping(value = "/groups", method = RequestMethod.POST, params="do=edit")
 	public String accountGroupsEdit(ModelMap model, HttpServletRequest request) {
+		if (getUser() == null) {model = null; return "account/forbidden";}
 		
 		Group group = groups.findGroupById(Long.valueOf(request.getParameter("form-groups-id")));
 		groups.changeGroupName(group, request.getParameter("form-groups-name"));
@@ -117,6 +123,7 @@ public class AccountController extends BaseController {
 	
 	@RequestMapping(value = "/groups", method = RequestMethod.POST, params="do=delete")
 	public String accountGroupsDelete(ModelMap model, HttpServletRequest request) {
+		if (getUser() == null) {model = null; return "account/forbidden";}
 		
 		Group group = groups.findGroupById(Long.valueOf(request.getParameter("form-groups-id")));
 		groups.removeGroup(group);
@@ -127,12 +134,16 @@ public class AccountController extends BaseController {
 
 	@RequestMapping(value = "/upload", method = RequestMethod.GET)
 	public String accountUpload(ModelMap model, HttpServletRequest request) {
+		if (getUser() == null) {model = null; return "account/forbidden";}
+		
 		return "account/upload";
 	}
 
 
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
 	public String accountUploadProcess(@RequestParam("form-upload-image") MultipartFile file, MultipartHttpServletRequest request, ModelMap model) throws IOException {
+		if (getUser() == null) {model = null; return "account/forbidden";}
+		
 		model.addAttribute("name", request.getParameter("form-upload-name"));
 		model.addAttribute("privacy", request.getParameter("form-upload-privacy"));
 		model.addAttribute("file", file.getSize());

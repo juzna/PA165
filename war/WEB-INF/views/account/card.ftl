@@ -44,6 +44,7 @@
 							<div class="form-actions">
 								<button class="btn btn-primary" type="submit" name="do" value="edit">Save changes</button>
 								<button class="btn btn-danger" type="submit" name="do" value="delete">Delete card</button>
+								<a class="btn" href="/browse/card/${card.key.id?c}">Cancel and go to card</a>
 							</div>
 						</form>
 					</div>

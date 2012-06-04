@@ -30,7 +30,7 @@
 				<form class="tagger margined" method="POST">
 					<input type="hidden" name="do" value="addTag" />
 					<input class="tagger-key" name="tagger-key" type="text" placeholder="Key">
-					<label class="tagger-private" name="tagger-private"><input type="checkbox" class="checkbox"> Private</label>
+					<label class="tagger-private" name="tagger-private">&nbsp;</label>
 					<input class="tagger-value" name="tagger-value" type="text" placeholder="Value">
 					<button class="tagger-submit btn" type="submit" >Add tag</button>
 				</form>

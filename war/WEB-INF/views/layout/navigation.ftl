@@ -1,13 +1,13 @@
 <div class="navbar">
 	<div class="navbar-inner">
 		<div class="container">
-			<span class="userarea" style="float: right;">
+			<div class="userarea" style="float: right;">
 				<#if user??>
 					<p>You are logged in as ${user.getEmail()} <a class="btn btn-mini" href="${logoutUrl}">Logout</a></p>
 				<#else>
-					<a href="${loginUrl}">Login with Google</button>
+					<p><a class="btn btn-primary" href="${loginUrl}">Login with Google</a></p>
 				</#if>
-			</span>
+			</div>
 			<a class="brand" href="/">jCardsManager</a>
 			<div class="nav-collapse collapse">
 				<ul class="nav">

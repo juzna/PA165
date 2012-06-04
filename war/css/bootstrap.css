@@ -4189,8 +4189,17 @@ h1 {
 #browse-card-billboard .card-image img {
   width: 100%;
 }
+#footer-other {
+  text-align: center;
+}
+#footer-other .btn {
+  margin-bottom: 10px;
+}
 body {
   background: #F5F5F5;
+}
+.userarea p {
+  line-height: 30px;
 }
 .marginer {
   margin-bottom: 20px;
@@ -4314,7 +4323,7 @@ section > header {
 .tagger .tagger-key {
   float: left;
   margin-right: 10px;
-  width: 50%;
+  width: 80%;
 }
 .tagger .tagger-private {
   margin: 0;

@@ -14,7 +14,7 @@
 						<tr><td>ID:</td><td><small>${user.userId}</small></td></tr>
 					</tbody>
 				</table>
-				<p><a class="btn btn-danger">Log out</a></p>
+				<p><a class="btn btn-danger" href="${logoutUrl}">Log out</a></p>
 			</section>
 		</div>
 	</div>

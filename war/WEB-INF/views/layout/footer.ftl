@@ -1,40 +1,28 @@
 <hr />
-<footer>
-	<div class="row">
-		<div class="span4">
-			<div id="footer-logo">
-				<img src="http://placehold.it/220x120" alt="Logo">
+<div class="container">
+	<footer>
+		<div class="row">
+			<div class="span4">
+				<div id="footer-disclaimer">
+					<h4>Disclaimer</h4>
+					<p>Created as final project for PA165 Enterprise Applications in Java at Faculty of Informatics, Masaryk University. <a href="http://is.muni.cz/predmet/fi/podzim2011/PA165?lang=en">Course on IS</a></p>
+				</div>
 			</div>
-			<div id="footer-disclaimer">
-				<p>Created for PA165.</p>
-
-				<p>Thanks to ...</p>
+	
+			<div class="span4" id="footer-authors">
+				<h4>Authors
+					<small>(in alphabetical order)</small>
+				</h4>
+				<h5><a href="https://github.com/juzna">Jan Dolecek</a></h5>
+				<h5><a href="https://github.com/Strajk">Pavel Dolecek</a></h5>
+				<h5><a href="https://github.com/Jenyk">Jenyk Holman</a></h5>
+				<h5><a href="https://github.com/Riema">Marie Hrdinova</a></h5>
+			</div>
+	
+			<div class="span4" id="footer-other">	
+				<p><a class="btn btn-primary" href="https://github.com/juzna/PA165/">Project on GitHub</a></p>
+				<p><a class="btn" href="https://github.com/juzna/PA165/wiki/">Wiki on GitHub</a></p>
 			</div>
 		</div>
-
-		<div class="span4" id="footer-authors">
-			<h4>Authors
-				<small>(in alphabetical order)</small>
-			</h4>
-			<h5>Jan Dolecek</h5>
-			<p><a href="#">Twitter</a> | <a href="#">GitHub</a></p>
-
-			<h5>Pavel Dolecek</h5>
-			<p><a href="#">Twitter</a> | <a href="#">GitHub</a></p>
-
-			<h5>Jenyk Holman</h5>
-			<p><a href="#">Twitter</a> | <a href="#">GitHub</a></p>
-
-			<h5>Marie Hrdinova</h5>
-			<p><a href="#">Twitter</a> | <a href="#">GitHub</a></p>
-		</div>
-
-		<div class="span4" id="footer-other">
-			<p>Used technologies…</p>
-
-			<p>Github…</p>
-
-			<p>FI MUNI</p>
-		</div>
-	</div>
-</footer>
+	</footer>
+</div>
